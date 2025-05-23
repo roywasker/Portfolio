@@ -8,7 +8,7 @@ plugins {
     // alias(libs.plugins.kobwebx.markdown)
 }
 
-group = "org.example.protolio"
+group = "org.example.portfolio"
 version = "1.0-SNAPSHOT"
 
 kobweb {
@@ -26,7 +26,7 @@ kobweb {
 }
 
 kotlin {
-    configAsKobwebApplication("protolio"/*, includeServer = true*/)
+    configAsKobwebApplication("portfolio"/*, includeServer = true*/)
 
     sourceSets {
 //        commonMain.dependencies {
