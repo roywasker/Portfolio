@@ -11,6 +11,7 @@ import org.example.protolio.components.layouts.PageLayout
 import org.example.protolio.components.sections.Home.ui.Home
 import org.example.protolio.components.sections.About.ui.About
 import org.example.protolio.components.sections.Experience.ui.Experience
+import org.example.protolio.components.sections.Project.ui.Projects
 import org.example.protolio.toSitePalette
 
 @Page
@@ -28,6 +29,8 @@ fun HomePage() {
             About()
 
             Experience()
+
+            Projects()
         }
     }
 }
