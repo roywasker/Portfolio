@@ -47,6 +47,10 @@ object Res {
         const val WORK_EXPERIENCE = "Software Developer with 1 year of experience specializing in Android development."
 
         const val PROJECT_SECTION = "A presentation of my most recent projects, highlighting creative and practical applications developed with cutting-edge technologies."
+
+        const val GET_IN_TOUCH = "GET IN TOUCH"
+        const val GET_IN_TOUCH_DISCRIPTION = "Feel free to reach out to me via mail or any of the listed mediums"
+        const val COPYRIGHT = "Roy Wasker"
     }
 
     object Url{

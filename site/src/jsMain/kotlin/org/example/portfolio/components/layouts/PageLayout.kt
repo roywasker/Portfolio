@@ -17,6 +17,7 @@ import kotlinx.browser.document
 import org.example.portfolio.components.sections.NavHeader.ui.NavHeader
 import org.example.portfolio.components.utils.Res
 import org.example.portfolio.components.widgets.AppearanceAwareImage
+import org.example.portfolio.components.widgets.BackToTopButton
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.ExperimentalComposeWebApi
 import org.jetbrains.compose.web.css.percent
@@ -47,7 +48,7 @@ fun PageLayout(
             content()
             //footer
         }
-
+        BackToTopButton()
     }
 }
 

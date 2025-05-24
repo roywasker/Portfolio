@@ -7,7 +7,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 
-
 val SkillTextStyle = com.varabyte.kobweb.silk.style.CssStyle {
 
     base {
@@ -30,6 +29,4 @@ val SkillTextStyle = com.varabyte.kobweb.silk.style.CssStyle {
     Breakpoint.XL {
         Modifier.fontSize(FontSize.Large)
     }
-
-
 }

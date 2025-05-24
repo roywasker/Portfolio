@@ -1,12 +1,10 @@
 package org.example.portfolio.components.sections.Experience.styles
 
 import com.varabyte.kobweb.compose.css.FontSize
-import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
-import com.varabyte.kobweb.compose.ui.modifiers.textAlign
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.style.CssStyle
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
@@ -44,33 +42,27 @@ val ExperienceStyle = CssStyle {
 }
 
 val WorkExperienceStyle = CssStyle {
-
-    Breakpoint.ZERO {
-        Modifier.fontSize(FontSize.Small)
+    base {
+        Modifier.fontSize(FontSize.Medium)
             .margin(topBottom = 0.75.cssRem)
-            .textAlign(TextAlign.Justify)
-    }
 
+    }
     Breakpoint.SM {
         Modifier.fontSize(FontSize.Small)
             .margin(topBottom = 0.75.cssRem)
-            .textAlign(TextAlign.Justify)
     }
     Breakpoint.MD {
         Modifier.fontSize(FontSize.Small)
             .margin(topBottom = 2.cssRem)
-            .textAlign(TextAlign.Center)
     }
     Breakpoint.LG {
         Modifier.fontSize(FontSize.Medium)
             .margin(topBottom = 2.cssRem)
-            .textAlign(TextAlign.Center)
     }
 
     Breakpoint.XL {
         Modifier.fontSize(FontSize.Large)
             .margin(topBottom = 2.cssRem)
-            .textAlign(TextAlign.Center)
     }
 }
 

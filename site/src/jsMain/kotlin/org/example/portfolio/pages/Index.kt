@@ -12,6 +12,7 @@ import org.example.portfolio.components.sections.Home.ui.Home
 import org.example.portfolio.components.sections.About.ui.About
 import org.example.portfolio.components.sections.Experience.ui.Experience
 import org.example.portfolio.components.sections.Project.ui.Projects
+import org.example.portfolio.components.sections.footer.ui.Footer
 import org.example.portfolio.toSitePalette
 
 @Page
@@ -31,6 +32,8 @@ fun HomePage() {
             Experience()
 
             Projects()
+
+            Footer()
         }
     }
 }
