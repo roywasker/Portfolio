@@ -14,7 +14,7 @@ object Res {
         const val CPP_LOGO = "images/Skills/cpp.svg"
         const val JETPACK_LIGHT_LOGO = "images/Skills/jetpack_light.svg"
         const val JETPACK_DARK_LOGO = "images/Skills/jetpack_dark.svg"
-        const val SPRINGBOOT_LOGO = "images/Skills/Spring_boot.svg"
+        const val SPRINGBOOT_LOGO = "images/Skills/spring_boot.svg"
         const val FIREBASE_LOGO = "images/Skills/firebase.svg"
         const val GITHUB_DARK_LOGO = "images/Skills/github_dark.svg"
         const val GITHUB_LIGHT_LOGO = "images/Skills/github_light.svg"
