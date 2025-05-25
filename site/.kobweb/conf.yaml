@@ -1,6 +1,6 @@
 site:
   title: "portfolio"
-  routePrefix: "Portfolio"
+  routePrefix: ""
 
 
 server:
