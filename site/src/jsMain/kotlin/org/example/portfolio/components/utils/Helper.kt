@@ -13,6 +13,6 @@ fun getAllWorkExperience() = listOf(
         sequenceNumber = "01",
         role = "Android Developer",
         organization = "Cellcom TV",
-        duration = "December 24 - Present"
+        duration = "August 24 - Present"
     )
 )
