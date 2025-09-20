@@ -25,6 +25,7 @@ object Res {
         const val PYTHON_LOGO = "images/Skills/python.svg"
         const val POSTMAM = "images/Skills/Postman.svg"
 
+        const val TRENDY = "images/Projects/Trendy.jpg"
         const val YOGATIME = "images/Projects/YogaTime.jpg"
         const val POKER = "images/Projects/PokerApp.jpg"
         const val FACTORY_MANAGEMENT = "images/Projects/Factory Management Backend.jpg"
@@ -58,8 +59,9 @@ object Res {
         const val GITHUB_URL = "https://github.com/roywasker"
         const val MEDIUM_URL = "https://medium.com/@royx520"
         const val GMAIL_URL = "mailto:royx520@gmail.com"
-        const val RESUME_URL = "https://drive.google.com/file/d/11wolDqAQ6wNCaCLtMjMPyZy3xjByhIov/view?usp=sharing"
+        const val RESUME_URL = "https://drive.google.com/file/d/129A9hfTfpxAEefEkL9Yri1fT5SRcUv6g/view?usp=sharing"
 
+        const val TRENDY = "https://github.com/roywasker/Trendy"
         const val YOGATIME = "https://github.com/roywasker/YogaTime"
         const val POKER = "https://github.com/roywasker/Poker-App"
         const val FACTORY_MANAGEMENT = "https://github.com/roywasker/Factory_Management_Backend"

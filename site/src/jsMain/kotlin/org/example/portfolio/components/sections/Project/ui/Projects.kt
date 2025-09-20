@@ -102,6 +102,7 @@ fun Projects() {
 
 fun getAllProjects() =
     listOf(
+        Pair(Res.Images.TRENDY, Res.Url.TRENDY),
         Pair(Res.Images.YOGATIME, Res.Url.YOGATIME),
         Pair(Res.Images.POKER, Res.Url.POKER),
         Pair(Res.Images.FACTORY_MANAGEMENT, Res.Url.FACTORY_MANAGEMENT),

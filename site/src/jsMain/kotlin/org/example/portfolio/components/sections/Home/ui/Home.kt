@@ -15,6 +15,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.id
 import com.varabyte.kobweb.core.rememberPageContext
+import com.varabyte.kobweb.framework.annotations.DelicateApi
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.forms.ButtonSize
 import com.varabyte.kobweb.silk.components.text.SpanText
@@ -34,6 +35,7 @@ import org.jetbrains.compose.web.css.AnimationTimingFunction
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.s
 
+@OptIn(DelicateApi::class)
 @Composable
 fun Home(
     currentPalette: SitePalette
