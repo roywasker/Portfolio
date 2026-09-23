@@ -1,0 +1,226 @@
+---
+import type { Project } from "../data/portfolio";
+
+interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+const smallPoster = project.poster.replace(/\.avif$/, "-320.avif");
+---
+
+<article
+  class="project-card"
+  style={`--project-accent: ${project.accent}; --project-accent-light: ${project.lightAccent}; --delay: ${index * 70}ms;`}
+  data-reveal="project"
+>
+  <a href={project.href} target="_blank" rel="noreferrer">
+    <div class="project-visual">
+      <span class="visual-index">0{index + 1}</span>
+      <img
+        class="project-poster-image"
+        src={project.poster}
+        srcset={`${smallPoster} 640w, ${project.poster} 1280w`}
+        sizes="(max-width: 48rem) calc(100vw - 2.65rem), (max-width: 92rem) 45vw, 704px"
+        alt={`${project.title} project preview`}
+        width="1280"
+        height="800"
+        loading="lazy"
+        decoding="async"
+      />
+      <span class="visual-signal" aria-hidden="true"></span>
+    </div>
+
+    <div class="project-main">
+      <p class="project-label">{project.label}</p>
+      <h3>{project.title}</h3>
+      <p class="project-description">{project.description}</p>
+    </div>
+
+    <div class="project-footer">
+      <ul aria-label={`${project.title} technologies`}>
+        {project.stack.map((item) => <li>{item}</li>)}
+      </ul>
+      <span class="project-link" aria-hidden="true">↗</span>
+    </div>
+
+    <span class="visually-hidden">Opens {project.title} on GitHub in a new tab</span>
+  </a>
+</article>
+
+<style>
+  .project-card {
+    --delay: 0ms;
+    --project-color: var(--project-accent);
+    --project-label-color: var(--project-color);
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--surface) 68%, var(--bg));
+    box-shadow: 0 18px 55px color-mix(in srgb, var(--ink) 4%, transparent);
+    transition: border-color .35s ease, box-shadow .35s ease, transform .35s cubic-bezier(.2, .8, .2, 1);
+  }
+
+  :global([data-theme="light"]) .project-card {
+    --project-color: var(--project-accent-light);
+    --project-label-color: color-mix(in srgb, var(--project-color) 35%, var(--ink));
+  }
+
+  .project-card:hover,
+  .project-card:focus-within {
+    border-color: color-mix(in srgb, var(--project-color) 70%, var(--line));
+    box-shadow: 0 24px 70px color-mix(in srgb, var(--project-color) 13%, transparent);
+    transform: translateY(-6px);
+  }
+
+  .project-card a {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: .7rem;
+    color: var(--ink);
+  }
+
+  .project-visual {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: clamp(13rem, 23vw, 21rem);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: calc(var(--radius-lg) - .55rem);
+    color: var(--project-color);
+    background:
+      radial-gradient(circle at center, color-mix(in srgb, var(--project-color) 10%, transparent), transparent 62%),
+      color-mix(in srgb, var(--surface-raised) 76%, var(--bg));
+    transition: border-color .35s ease;
+  }
+
+  .visual-index {
+    position: absolute;
+    z-index: 2;
+    top: 1rem;
+    left: 1rem;
+    padding: .38rem .52rem;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 999px;
+    color: #fff;
+    background: rgba(12, 14, 18, .55);
+    backdrop-filter: blur(10px);
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+  }
+
+  .visual-signal {
+    position: absolute;
+    z-index: 2;
+    right: 1rem;
+    bottom: 1rem;
+    width: .52rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--project-color);
+    box-shadow: 0 0 16px var(--project-color);
+  }
+
+  a:hover .project-visual,
+  a:focus-visible .project-visual { border-color: color-mix(in srgb, var(--project-color) 55%, var(--line)); }
+
+  .project-poster-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .65s cubic-bezier(.2, .8, .2, 1), filter .35s ease;
+  }
+
+  a:hover .project-poster-image,
+  a:focus-visible .project-poster-image {
+    transform: scale(1.035);
+    filter: saturate(1.06) contrast(1.02);
+  }
+
+  .project-main { padding: clamp(1.3rem, 2.4vw, 2rem) clamp(.65rem, 1.3vw, 1.1rem) 1.5rem; }
+  .project-label {
+    margin: 0;
+    color: var(--project-label-color);
+    font-size: .62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .13em;
+  }
+
+  h3 {
+    margin: .9rem 0 1rem;
+    font-size: clamp(2.6rem, 5vw, 5.2rem);
+    line-height: .86;
+    letter-spacing: -.08em;
+  }
+
+  .project-description {
+    max-width: 38rem;
+    margin: 0;
+    color: var(--muted);
+    font-size: clamp(.84rem, 1vw, .98rem);
+    line-height: 1.68;
+  }
+
+  .project-footer {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: auto;
+    padding: 1.25rem clamp(.65rem, 1.3vw, 1.1rem) .75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  ul { display: flex; flex-wrap: wrap; gap: .42rem; margin: 0; padding: 0; list-style: none; }
+  li {
+    padding: .42rem .64rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: .58rem;
+    transition: border-color .3s ease, color .3s ease;
+  }
+
+  a:hover li,
+  a:focus-visible li { color: var(--ink); border-color: color-mix(in srgb, var(--project-color) 58%, var(--line)); }
+
+  .project-link {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    aspect-ratio: 1;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--ink);
+    font-size: 1.25rem;
+    transition: border-color .3s ease, color .3s ease, transform .3s ease;
+  }
+
+  a:hover .project-link,
+  a:focus-visible .project-link {
+    border-color: var(--project-color);
+    color: var(--project-color);
+    transform: translate(.15rem, -.15rem);
+  }
+
+  @media (max-width: 64rem) {
+    .project-visual { min-height: clamp(13rem, 28vw, 18rem); }
+    h3 { font-size: clamp(2.6rem, 6vw, 4rem); }
+  }
+
+  @media (max-width: 48rem) {
+    .project-card:hover,
+    .project-card:focus-within { transform: translateY(-3px); }
+    .project-visual { min-height: min(68vw, 20rem); }
+    h3 { font-size: clamp(3rem, 14vw, 5rem); }
+  }
+</style>

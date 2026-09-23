@@ -1,0 +1,212 @@
+---
+import Header from "../components/Header.astro";
+import { profile } from "../data/portfolio";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL("/social-card.png", Astro.site);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: profile.name,
+  url: Astro.site,
+  email: `mailto:${profile.email}`,
+  jobTitle: profile.role,
+  worksFor: {
+    "@type": "Organization",
+    name: profile.company,
+  },
+  sameAs: profile.socials.map(({ href }) => href),
+  knowsAbout: profile.knowsAbout,
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta id="theme-color" name="theme-color" content="#10110f" data-dark="#10110f" data-light="#ffffff" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Roy Wasker — Android Engineer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content="Roy Wasker — Android Engineer" />
+    <title>{title}</title>
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        root.classList.add("js");
+        try {
+          const requested = new URLSearchParams(location.search).get("theme");
+          const saved = localStorage.getItem("theme");
+          const preferred = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+          const theme = requested === "light" || requested === "dark"
+            ? requested
+            : saved || preferred;
+          root.dataset.theme = theme;
+          root.style.colorScheme = theme;
+          const themeColor = document.querySelector("#theme-color");
+          if (themeColor instanceof HTMLMetaElement) {
+            themeColor.content = theme === "light" ? themeColor.dataset.light : themeColor.dataset.dark;
+          }
+        } catch {
+          root.dataset.theme = "dark";
+          root.style.colorScheme = "dark";
+        }
+      })();
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main"><slot /></main>
+    <script>
+      const root = document.documentElement;
+      const themeButton = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+      const themeColor = document.querySelector<HTMLMetaElement>("#theme-color");
+      const colorPreference = matchMedia("(prefers-color-scheme: light)");
+      const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
+
+      const applyTheme = (theme: "dark" | "light") => {
+        root.dataset.theme = theme;
+        root.style.colorScheme = theme;
+        if (themeColor) {
+          themeColor.content = theme === "light"
+            ? themeColor.dataset.light ?? "#ffffff"
+            : themeColor.dataset.dark ?? "#10110f";
+        }
+      };
+
+      const syncThemeButton = () => {
+        if (!themeButton) return;
+        const isLight = root.dataset.theme === "light";
+        themeButton.ariaLabel = `Switch to ${isLight ? "dark" : "light"} theme`;
+        themeButton.title = themeButton.ariaLabel;
+      };
+
+      syncThemeButton();
+      const switchTheme = () => {
+        const theme = root.dataset.theme === "light" ? "dark" : "light";
+        applyTheme(theme);
+        try { localStorage.setItem("theme", theme); } catch {}
+        syncThemeButton();
+      };
+
+      themeButton?.addEventListener("click", () => {
+        const transitionDocument = document as Document & {
+          startViewTransition?: (update: () => void) => unknown;
+        };
+        if (motionPreference.matches || !transitionDocument.startViewTransition) {
+          switchTheme();
+          return;
+        }
+        transitionDocument.startViewTransition(() => switchTheme());
+      });
+
+      colorPreference.addEventListener("change", (event) => {
+        try {
+          if (localStorage.getItem("theme")) return;
+        } catch {}
+        applyTheme(event.matches ? "light" : "dark");
+        syncThemeButton();
+      });
+
+      const mobileMenu = document.querySelector<HTMLDetailsElement>(".mobile-menu");
+      const mobileMenuButton = mobileMenu?.querySelector<HTMLElement>("summary");
+      const closeMobileMenu = (restoreFocus = false) => {
+        if (!mobileMenu?.open) return;
+        mobileMenu.open = false;
+        if (restoreFocus) mobileMenuButton?.focus();
+      };
+
+      const syncMobileMenu = () => {
+        const isOpen = mobileMenu?.open === true;
+        root.classList.toggle("menu-open", isOpen);
+        mobileMenuButton?.setAttribute("aria-expanded", String(isOpen));
+        mobileMenuButton?.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+      };
+
+      mobileMenu?.addEventListener("toggle", syncMobileMenu);
+      document.querySelectorAll<HTMLAnchorElement>(".mobile-menu nav a").forEach((link) => {
+        link.addEventListener("click", () => closeMobileMenu());
+      });
+      document.addEventListener("click", (event) => {
+        if (mobileMenu?.open && event.target instanceof Node && !mobileMenu.contains(event.target)) {
+          closeMobileMenu();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeMobileMenu(true);
+      });
+      matchMedia("(min-width: 48.0625rem)").addEventListener("change", (event) => {
+        if (event.matches) closeMobileMenu();
+      });
+      syncMobileMenu();
+
+      const sectionLinks = [...document.querySelectorAll<HTMLAnchorElement>("[data-section-link]")];
+      const navigationSections = [...new Set(sectionLinks.map((link) => link.hash))]
+        .map((hash) => document.querySelector<HTMLElement>(hash))
+        .filter((section): section is HTMLElement => section !== null);
+
+      const setActiveSection = (activeId: string) => {
+        sectionLinks.forEach((link) => {
+          if (link.hash === `#${activeId}`) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+        });
+      };
+
+      if ("IntersectionObserver" in window) {
+        const activeSections = new Set<HTMLElement>();
+        const sectionObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            const section = entry.target as HTMLElement;
+            if (entry.isIntersecting) activeSections.add(section);
+            else activeSections.delete(section);
+          });
+
+          const active = [...activeSections].sort((first, second) => second.offsetTop - first.offsetTop)[0];
+          if (active) setActiveSection(active.id);
+        }, { rootMargin: "0px 0px -70%", threshold: 0 });
+
+        navigationSections.forEach((section) => sectionObserver.observe(section));
+      }
+
+      const supportsScrollTimelines = CSS.supports("animation-timeline: view()");
+      if (!supportsScrollTimelines && !motionPreference.matches) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: .12, rootMargin: "0px 0px -8%" });
+
+        document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((item) => revealObserver.observe(item));
+      } else if (motionPreference.matches) {
+        document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((item) => item.classList.add("is-visible"));
+      }
+    </script>
+  </body>
+</html>

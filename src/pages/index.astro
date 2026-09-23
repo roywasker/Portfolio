@@ -1,0 +1,142 @@
+---
+import Footer from "../components/Footer.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import SkillsOrbit from "../components/SkillsOrbit.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { profile, projects } from "../data/portfolio";
+
+const title = `${profile.name} — ${profile.role}`;
+const description = "Android engineer specializing in Kotlin, Jetpack Compose and high-quality mobile experiences.";
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="page-progress" aria-hidden="true"><span></span></div>
+
+  <section id="top" class="hero section-shell" aria-labelledby="hero-title" data-hero>
+    <div class="hero-topline">
+      <p><span class="live-dot" aria-hidden="true"></span> {profile.role} at {profile.company}</p>
+      <p class="hero-code">Kotlin · Compose · Product craft</p>
+    </div>
+
+    <div class="hero-title-wrap">
+      <p class="hero-kicker">Hello, I’m {profile.name}</p>
+      <h1 id="hero-title">
+        <span class="hero-word hero-word-one">MOBILE</span>
+        <span class="hero-word hero-word-two outline-word">ENGINEER</span>
+      </h1>
+      <div class="orbit-mark" aria-hidden="true">
+        <span></span><span></span><i></i>
+      </div>
+    </div>
+
+    <div class="hero-bottom">
+      <p class="hero-intro">
+        I design and build mobile products that feel <strong>clear, fast and considered</strong> — from architecture to the last interaction.
+      </p>
+      <div class="hero-cta">
+        <a class="button button-primary" href="#about">Meet the engineer <span aria-hidden="true">↓</span></a>
+        <a class="button button-ghost" href={profile.resume} target="_blank" rel="noreferrer">View résumé <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+
+    <div class="scroll-cue" aria-hidden="true"><span></span> Scroll to explore</div>
+  </section>
+
+  <section id="about" class="about-story" data-about-section aria-labelledby="about-title">
+    <div class="about-sticky-word" aria-hidden="true">ABOUT</div>
+    <div class="section-shell about-shell">
+      <div class="about-intro" data-reveal>
+        <p class="eyebrow"><span>01</span> The person behind the code</p>
+        <h2 id="about-title">I TURN COMPLEXITY<br />INTO <em>CALM SOFTWARE.</em></h2>
+      </div>
+
+      <div class="about-profile-grid">
+        <div class="profile-signal" data-reveal="left" aria-hidden="true">
+          <div class="profile-monogram">RW</div>
+          <div class="profile-ring ring-a"></div>
+          <div class="profile-ring ring-b"></div>
+          <span class="profile-node node-a"></span>
+          <span class="profile-node node-b"></span>
+          <p>ANDROID<br />ENGINEER</p>
+        </div>
+
+        <article class="about-copy" data-reveal="right">
+          <p class="lead">I’m a Computer Science graduate with a deep interest in how technology can make everyday experiences simpler and more useful.</p>
+          <p>My focus is modern Android development with Kotlin and Jetpack Compose. I enjoy taking a product from an ambiguous problem to a clear interface, thoughtful architecture and production-ready code.</p>
+          <p>Beyond mobile, I explore backend systems, Kotlin Multiplatform and open source. Curiosity keeps me moving; attention to detail keeps the result grounded.</p>
+          <a href={`mailto:${profile.email}`}>Let’s talk <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+
+      <div class="about-facts" data-reveal>
+        <article>
+          <span>Current role</span>
+          <strong>{profile.currentTitle}</strong>
+          <p>{profile.company}</p>
+        </article>
+        <article>
+          <span>Experience</span>
+          <strong>Android Developer</strong>
+          <p>Since {profile.employedSince}</p>
+        </article>
+        <article>
+          <span>Foundation</span>
+          <strong>Computer Science</strong>
+          <p>Graduate</p>
+        </article>
+        <article>
+          <span>Working style</span>
+          <strong>Curious & precise</strong>
+          <p>Product-minded</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" class="section-shell work-section" aria-labelledby="work-title">
+    <div class="section-heading" data-reveal>
+      <p class="eyebrow"><span>02</span> Selected work</p>
+      <div>
+        <h2 id="work-title">PRODUCTS WITH<br /><em>A POINT OF VIEW.</em></h2>
+        <p>Real product screens bring each project into view, supported by its purpose and the engineering choices behind it.</p>
+      </div>
+    </div>
+
+    <div class="project-list">
+      {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
+      <a
+        class="all-work-link"
+        href="https://github.com/roywasker?tab=repositories"
+        target="_blank"
+        rel="noreferrer"
+        data-reveal="project"
+        style={`--delay: ${projects.length * 70}ms;`}
+      >
+        <div class="github-card-visual" aria-hidden="true">
+          <span class="github-card-index">0{projects.length + 1}</span>
+          <p>OPEN<br /><em>SOURCE</em></p>
+          <span class="github-card-signal"></span>
+        </div>
+
+        <div class="github-card-main">
+          <p class="github-card-label">Developer profile</p>
+          <strong>Explore GitHub</strong>
+          <p class="github-card-description">More repositories, experiments and practical learning beyond the selected projects.</p>
+        </div>
+
+        <div class="github-card-footer">
+          <ul aria-label="GitHub profile content">
+            <li>Repositories</li>
+            <li>Experiments</li>
+            <li>Open source</li>
+          </ul>
+          <i aria-hidden="true">↗</i>
+        </div>
+        <span class="visually-hidden">Opens Roy Wasker’s GitHub repositories in a new tab</span>
+      </a>
+    </div>
+  </section>
+
+  <SkillsOrbit />
+  <Footer />
+</BaseLayout>

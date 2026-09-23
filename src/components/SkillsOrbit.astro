@@ -1,0 +1,313 @@
+---
+import { skillGroups } from "../data/portfolio";
+---
+
+<section id="skills" class="skills-section" data-skills-section aria-labelledby="skills-title">
+  <div class="skills-sticky section-shell">
+    <div class="skills-heading" data-reveal>
+      <p class="eyebrow"><span>03</span> Capability system</p>
+      <h2 id="skills-title">TOOLS IN<br /><em>ORBIT.</em></h2>
+      <p>A living toolkit built around Android — connected by product thinking, architecture and a constant drive to learn.</p>
+      <div class="skills-scroll-note" aria-hidden="true"><span></span> Scroll to rotate</div>
+    </div>
+
+    <div class="skills-stage" role="group" aria-labelledby="skills-title">
+      <div class="skills-radar" aria-hidden="true">
+        <i></i><i></i><i></i>
+      </div>
+
+      <div class="skills-core">
+        <span>CORE</span>
+        <strong>ANDROID</strong>
+        <small>Kotlin first</small>
+      </div>
+
+      {skillGroups.map((group, index) => (
+        <article
+          class="skill-satellite"
+          style={`--angle: ${group.angle}; --angle-reverse: ${group.angleReverse}; --index: ${index};`}
+        >
+          <span>{group.number}</span>
+          <h3>{group.title}</h3>
+          <p>{group.skills.join(" · ")}</p>
+        </article>
+      ))}
+
+      <div class="skills-scan" aria-hidden="true"></div>
+    </div>
+
+    <div class="skills-progress" aria-hidden="true"><span></span></div>
+  </div>
+</section>
+
+<style>
+  .skills-section {
+    --skills-bg: #11130f;
+    --skills-ink: #f2f0e9;
+    --skills-muted: #9ea097;
+    --skills-subtle: #888b82;
+    --skills-accent: #c8ff36;
+    --skills-accent-ink: #11130f;
+    --skills-panel: #1a1c18;
+    --skills-panel-hover: #20231c;
+    --skills-line: rgba(242, 240, 233, .18);
+    position: relative;
+    min-height: auto;
+    color: var(--skills-ink);
+    background: var(--skills-bg);
+  }
+
+  :global([data-theme="light"]) .skills-section {
+    --skills-bg: #ffffff;
+    --skills-ink: #132440;
+    --skills-muted: #5c6c84;
+    --skills-subtle: #7a879a;
+    --skills-accent: #3565c9;
+    --skills-accent-ink: #10213e;
+    --skills-panel: #ffffff;
+    --skills-panel-hover: #f1f6ff;
+    --skills-line: rgba(19, 36, 64, .14);
+    background:
+      radial-gradient(circle at 88% 20%, rgba(111, 164, 239, .18), transparent 28rem),
+      radial-gradient(circle at 5% 82%, rgba(158, 197, 255, .13), transparent 30rem),
+      var(--skills-bg);
+  }
+
+  :global([data-theme="light"]) .skills-core {
+    border: 1px solid rgba(53, 101, 201, .2);
+    background: linear-gradient(145deg, #b8d7ff, #7eadef);
+    box-shadow:
+      0 22px 60px rgba(53, 101, 201, .2),
+      inset 0 1px 0 rgba(255, 255, 255, .72);
+  }
+
+  :global([data-theme="light"]) .skill-satellite {
+    background: rgba(255, 255, 255, .88);
+    box-shadow: 0 16px 44px rgba(30, 68, 135, .08);
+  }
+
+  :global([data-theme="light"]) .skill-satellite:hover {
+    background: var(--skills-panel-hover);
+    box-shadow: 0 20px 52px rgba(53, 101, 201, .14);
+  }
+
+  .skills-sticky {
+    position: relative;
+    top: 0;
+    display: grid;
+    grid-template-columns: minmax(18rem, .62fr) minmax(32rem, 1.38fr);
+    gap: clamp(2rem, 5vw, 6rem);
+    align-items: center;
+    min-height: 100svh;
+    padding-block: 6rem 2rem;
+  }
+
+  .skills-heading { position: relative; z-index: 2; }
+  .skills-heading .eyebrow { color: var(--skills-muted); }
+  .skills-heading .eyebrow span { color: var(--skills-accent); }
+  .skills-heading h2 {
+    margin: clamp(2rem, 5vh, 4rem) 0 1.5rem;
+    font-size: clamp(4rem, 8vw, 8rem);
+    line-height: .78;
+    letter-spacing: -.09em;
+  }
+  .skills-heading h2 em { color: transparent; font-style: normal; -webkit-text-stroke: 1px var(--skills-accent); }
+  .skills-heading > p:last-of-type { max-width: 26rem; color: var(--skills-muted); font-size: .9rem; line-height: 1.7; }
+
+  .skills-scroll-note { display: flex; align-items: center; gap: .8rem; margin-top: 3rem; color: var(--skills-subtle); font-size: .58rem; text-transform: uppercase; letter-spacing: .14em; }
+  .skills-scroll-note span { width: 2rem; height: 1px; background: var(--skills-line); }
+
+  .skills-stage {
+    position: relative;
+    width: min(62vw, 45rem);
+    aspect-ratio: 1;
+    margin-inline: auto;
+  }
+
+  .skills-radar,
+  .skills-radar i { position: absolute; border: 1px solid var(--skills-line); border-radius: 50%; }
+  .skills-radar { inset: 5%; }
+  .skills-radar::before,
+  .skills-radar::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: var(--skills-line);
+    transform: translate(-50%, -50%);
+  }
+  .skills-radar::before { width: 100%; height: 1px; }
+  .skills-radar::after { width: 1px; height: 100%; }
+  .skills-radar i:nth-child(1) { inset: 16%; }
+  .skills-radar i:nth-child(2) { inset: 32%; border-style: dashed; }
+  .skills-radar i:nth-child(3) { inset: 47%; border-color: var(--skills-accent); box-shadow: 0 0 24px color-mix(in srgb, var(--skills-accent) 24%, transparent); }
+
+  .skills-core {
+    position: absolute;
+    z-index: 3;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    place-content: center;
+    width: 9.5rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: var(--skills-accent-ink);
+    background: var(--skills-accent);
+    text-align: center;
+    box-shadow: 0 0 4rem color-mix(in srgb, var(--skills-accent) 28%, transparent);
+    transform: translate(-50%, -50%) scale(.95);
+  }
+  .skills-core span, .skills-core small { font-size: .52rem; font-weight: 760; text-transform: uppercase; letter-spacing: .14em; }
+  .skills-core strong { font-size: 1.1rem; letter-spacing: -.04em; }
+
+  .skill-satellite {
+    --radius: min(26vw, 18rem);
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    width: clamp(9.5rem, 15vw, 12rem);
+    min-height: 7rem;
+    padding: 1rem;
+    border: 1px solid var(--skills-line);
+    border-radius: 1.2rem;
+    background: color-mix(in srgb, var(--skills-panel) 84%, transparent);
+    backdrop-filter: blur(12px);
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--angle))
+      translateX(var(--radius))
+      rotate(var(--angle-reverse));
+    transition: border-color .25s ease, background-color .25s ease;
+  }
+  .skill-satellite:hover { border-color: var(--skills-accent); background: var(--skills-panel-hover); }
+  .skill-satellite > span { color: var(--skills-accent); font-size: .58rem; }
+  .skill-satellite h3 { margin: .75rem 0 .35rem; font-size: 1rem; letter-spacing: -.03em; }
+  .skill-satellite p { margin: 0; color: var(--skills-muted); font-size: .62rem; line-height: 1.5; }
+
+  .skills-scan {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 44%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--skills-accent), transparent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--skills-accent) 50%, transparent);
+    transform: rotate(0);
+    transform-origin: left;
+  }
+
+  .skills-progress {
+    position: absolute;
+    right: 0;
+    bottom: 2rem;
+    width: 8rem;
+    height: 2px;
+    overflow: hidden;
+    background: var(--skills-line);
+  }
+  .skills-progress span { display: block; width: 100%; height: 100%; background: var(--skills-accent); transform: scaleX(0); transform-origin: left; }
+
+  @supports (animation-timeline: scroll()) {
+    .skills-section {
+      min-height: 190vh;
+      view-timeline-name: --skills-scroll;
+      view-timeline-axis: block;
+    }
+
+    .skills-sticky { position: sticky; }
+
+    .skills-radar,
+    .skills-scan,
+    .skills-core,
+    .skill-satellite,
+    .skills-progress span {
+      animation-duration: 1ms;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+      animation-timeline: --skills-scroll;
+      animation-range: contain 0% contain 100%;
+    }
+
+    .skills-radar,
+    .skills-scan { animation-name: skills-turn; }
+    .skills-core { animation-name: skills-core; }
+    .skill-satellite { animation-name: skills-satellite; }
+    .skills-progress span { animation-name: skills-progress; }
+
+    @keyframes skills-turn {
+      from { transform: rotate(0); }
+      to { transform: rotate(220deg); }
+    }
+
+    @keyframes skills-core {
+      from {
+        box-shadow: 0 0 2rem color-mix(in srgb, var(--skills-accent) 28%, transparent);
+        transform: translate(-50%, -50%) scale(.9);
+      }
+      to {
+        box-shadow: 0 0 6rem color-mix(in srgb, var(--skills-accent) 28%, transparent);
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    @keyframes skills-satellite {
+      from {
+        transform:
+          translate(-50%, -50%)
+          rotate(var(--angle))
+          translateX(var(--radius))
+          rotate(var(--angle-reverse));
+      }
+      to {
+        transform:
+          translate(-50%, -50%)
+          rotate(calc(var(--angle) + 220deg))
+          translateX(var(--radius))
+          rotate(calc(var(--angle-reverse) - 220deg));
+      }
+    }
+
+    @keyframes skills-progress { to { transform: scaleX(1); } }
+  }
+
+  @media (max-width: 64rem) {
+    .skills-sticky { grid-template-columns: 1fr; align-content: center; }
+    .skills-heading h2 { font-size: clamp(3.5rem, 12vw, 7rem); }
+    .skills-heading > p:last-of-type { max-width: 36rem; }
+    .skills-scroll-note { display: none; }
+    .skills-stage { width: min(88vw, 39rem); }
+    .skill-satellite { --radius: min(36vw, 15rem); width: clamp(8rem, 21vw, 10rem); }
+  }
+
+  @media (min-width: 42.001rem) and (max-height: 50rem) {
+    .skills-sticky {
+      grid-template-columns: minmax(15rem, .62fr) minmax(27rem, 1.38fr);
+      gap: clamp(1.5rem, 3vw, 3rem);
+      align-content: normal;
+      padding-block: 4.5rem 1rem;
+    }
+    .skills-heading h2 { font-size: clamp(3.5rem, 7vw, 5.5rem); }
+    .skills-stage { width: min(54vw, 36rem, calc(100svh - 6rem)); }
+    .skill-satellite { --radius: min(21vw, 13rem); width: clamp(8rem, 15vw, 10rem); }
+  }
+
+  @media (max-width: 42rem), (max-width: 64rem) and (max-height: 42rem) {
+    .skills-section { min-height: auto; padding-block: 7rem; }
+    .skills-sticky { position: relative; display: block; min-height: 0; padding-block: 0; }
+    .skills-stage { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; width: 100%; aspect-ratio: auto; margin-top: 3rem; }
+    .skills-radar, .skills-scan, .skills-progress { display: none; }
+    .skills-core { position: relative; top: auto; left: auto; grid-column: span 2; width: 100%; aspect-ratio: auto; min-height: 9rem; border-radius: 1.5rem; transform: none; animation: none; }
+    .skill-satellite {
+      position: relative;
+      top: auto;
+      left: auto;
+      width: 100%;
+      min-height: 9.5rem;
+      transform: none;
+      animation: none;
+    }
+  }
+</style>
