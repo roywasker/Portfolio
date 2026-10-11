@@ -54,6 +54,7 @@ try {
     "--only-categories=performance,accessibility,best-practices,seo",
     "--output=json",
     `--output-path=${reportPath}`,
+    "--save-assets",
     "--chrome-flags=--headless --no-sandbox --disable-dev-shm-usage",
     "--quiet",
   ]);
@@ -82,6 +83,8 @@ try {
 
   console.log("Lighthouse scores:", categories);
   console.log("Lighthouse metrics:", metrics);
+  console.log("Main-thread work:", report.audits["mainthread-work-breakdown"]?.details?.items);
+  console.log("Longest tasks:", report.audits["long-tasks"]?.details?.items?.slice(0, 6));
 
   if (failures.length > 0) {
     const summary = failures.map(([name, actual, limit, operator]) => `${name}: ${actual} (expected ${operator} ${limit})`).join("\n");

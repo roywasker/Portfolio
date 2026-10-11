@@ -9,7 +9,6 @@ The site presents Roy’s background, selected Android and backend projects, tec
 ## Preview
 
 The current Mobile Engineer hero in the desktop layout, shown in both themes.
-These screenshots were captured from the local production build with reduced motion enabled.
 
 ### Desktop — dark mode
 
@@ -18,14 +17,6 @@ These screenshots were captured from the local production build with reduced mot
 ### Desktop — light mode
 
 ![New portfolio desktop hero in light mode](./image/hero-light-desktop.png)
-
-Regenerate screenshots from the current code:
-
-```sh
-npm run screenshots
-```
-
-The capture script saves desktop and mobile heroes in both themes, plus desktop captures of About, Projects, Skills and Contact, under `image/`. It uses a dedicated production preview and hides the fixed navigation in section-only captures so it does not cover the content.
 
 ## Highlights
 
@@ -156,18 +147,6 @@ The hero scene uses a native CSS scroll timeline for a subtle upward movement on
 - Reduced-motion support.
 
 Automated checks are an additional safety net and do not replace manual keyboard and screen-reader testing.
-
-
-## Checks
-
-```sh
-npm run test:types    # Type-check the test suite
-npm run test:e2e      # Build current source and run the full Playwright matrix
-npm run test:report   # Open the HTML report
-npm run test:contracts # HTTP and asset checks without launching a browser
-```
-
-See [tests/README.md](./tests/README.md) for coverage, focused commands and environment limits. Browser tests must run successfully before claiming that a change is fully verified.
 
 ## Contact
 
