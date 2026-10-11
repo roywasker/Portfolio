@@ -51,6 +51,9 @@ const smallPoster = project.poster.replace(/\.avif$/, "-320.avif");
 
 <style>
   .project-card {
+    /* Render distant cards when needed; retain their measured height afterward. */
+    content-visibility: auto;
+    contain-intrinsic-block-size: auto 36rem;
     --delay: 0ms;
     --project-color: var(--project-accent);
     --project-label-color: var(--project-color);
