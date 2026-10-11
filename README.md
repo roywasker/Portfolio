@@ -8,21 +8,24 @@ The site presents Roy’s background, selected Android and backend projects, tec
 
 ## Preview
 
-### Hero
+The current Mobile Engineer hero in the desktop layout, shown in both themes.
+These screenshots were captured from the local production build with reduced motion enabled.
 
-![Portfolio hero in dark mode](./image/home.png)
+### Desktop — dark mode
 
-### About and experience
+![New portfolio desktop hero in dark mode](./image/hero-dark-desktop.png)
 
-![About and experience section](./image/work.png)
+### Desktop — light mode
 
-### Selected projects
+![New portfolio desktop hero in light mode](./image/hero-light-desktop.png)
 
-![Selected projects grid](./image/project.png)
+Regenerate screenshots from the current code:
 
-### Skills orbit
+```sh
+npm run screenshots
+```
 
-![Animated skills orbit section](./image/skill.png)
+The capture script saves desktop and mobile heroes in both themes, plus desktop captures of About, Projects, Skills and Contact, under `image/`. It uses a dedicated production preview and hides the fixed navigation in section-only captures so it does not cover the content.
 
 ## Highlights
 
@@ -30,7 +33,9 @@ The site presents Roy’s background, selected Android and backend projects, tec
 - Static Astro output with minimal client-side JavaScript.
 - Dark and light themes with persisted user preference and system-theme fallback.
 - Browser `theme-color` and `color-scheme` synchronization.
-- Native CSS scroll-driven animations for the hero, reveal effects, About composition, page progress and Skills orbit.
+- Native CSS scroll-driven animation for the hero and section/project reveal effects.
+- Interactive phone preview with GitHub project links and keyboard-accessible layout inspection.
+- Consistent Skills cards and explicit email, copy-email and LinkedIn contact actions.
 - Progressive animation fallback for browsers without scroll-timeline support.
 - Automatic active-section highlighting in desktop and mobile navigation.
 - Accessible mobile navigation with Escape handling, focus restoration and outside-click dismissal.
@@ -93,7 +98,7 @@ The repository also retains the original Kotlin/Kobweb implementation under `sit
 │   ├── layouts/BaseLayout.astro
 │   ├── pages/index.astro
 │   └── styles/global.css
-├── tests/portfolio.spec.ts
+├── tests/                      # HTTP, interaction, accessibility and responsive tests
 ├── astro.config.mjs
 ├── playwright.config.ts
 ├── package.json
@@ -104,9 +109,9 @@ The repository also retains the original Kotlin/Kobweb implementation under `sit
 
 ### Responsive layout
 
-The design uses fluid type, constrained content shells, CSS Grid and targeted breakpoints. Project cards use a two-column grid on wider screens and a single-column flow on mobile. The Skills experience switches from a scroll-controlled orbit to a compact card grid on narrow or low-height screens.
+The design uses fluid type, constrained content shells, CSS Grid and targeted breakpoints. Project cards use a two-column grid on wider screens and a single-column flow on mobile. Skills use matching category cards and technology tags, with four, two or one column according to screen width.
 
-Automated browser coverage includes these representative viewports:
+The test matrix covers 15 viewports from 320px to 2560px, including landscape and breakpoint boundaries. Examples:
 
 - 320×568 — compact mobile
 - 390×844 — modern mobile
@@ -117,17 +122,11 @@ Automated browser coverage includes these representative viewports:
 
 Theme tokens are defined as CSS custom properties. On first visit, the site follows `prefers-color-scheme`; a manual selection is persisted in `localStorage`. Theme changes also update the browser chrome through `meta[name="theme-color"]` and the root `color-scheme` property.
 
-Light mode separates surface blue from text blue so the palette remains visually light while text continues to meet WCAG contrast requirements.
+Dark mode pairs charcoal surfaces with lime accents. Light mode uses an ivory background, white cards, deep green accents and softer shadows; the phone preview uses mint highlights. Text colors preserve readable contrast against the light surfaces.
 
 ### Motion
 
-Continuous scroll effects use native CSS animation timelines instead of per-frame JavaScript layout calculations. This covers:
-
-- Page progress indicator
-- Hero title movement and fading
-- About background word, rings and signal nodes
-- Section and project reveals
-- Skills radar, satellites, scan line and progress
+The hero scene uses a native CSS scroll timeline for a subtle upward movement on wider screens. The editor and phone preview remain separated from the inspection controls. Section and project reveals also use CSS timelines, while pointer input adds a gentle device tilt.
 
 `prefers-reduced-motion` disables non-essential motion. Browsers without CSS scroll timelines receive a lightweight `IntersectionObserver` reveal fallback.
 
@@ -158,6 +157,17 @@ Continuous scroll effects use native CSS animation timelines instead of per-fram
 
 Automated checks are an additional safety net and do not replace manual keyboard and screen-reader testing.
 
+
+## Checks
+
+```sh
+npm run test:types    # Type-check the test suite
+npm run test:e2e      # Build current source and run the full Playwright matrix
+npm run test:report   # Open the HTML report
+npm run test:contracts # HTTP and asset checks without launching a browser
+```
+
+See [tests/README.md](./tests/README.md) for coverage, focused commands and environment limits. Browser tests must run successfully before claiming that a change is fully verified.
 
 ## Contact
 

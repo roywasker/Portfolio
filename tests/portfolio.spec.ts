@@ -54,16 +54,31 @@ test("meets automated WCAG A and AA checks", async ({ page }) => {
 });
 
 test("runs continuous scroll motion on CSS timelines", async ({ page }) => {
-  test.skip((page.viewportSize()?.width ?? 0) <= 672, "Compact layouts intentionally disable orbit motion");
+  test.skip((page.viewportSize()?.width ?? 0) <= 928, "Compact layouts intentionally disable hero scroll motion");
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   expect(await page.evaluate(() => CSS.supports("animation-timeline: scroll()"))).toBe(true);
 
-  const heroWord = page.locator(".hero-word-one");
-  const startTransform = await heroWord.evaluate((element) => getComputedStyle(element).transform);
-  await page.evaluate(() => window.scrollTo({ top: window.innerHeight * .65 }));
-  await page.waitForTimeout(100);
-  const scrolledTransform = await heroWord.evaluate((element) => getComputedStyle(element).transform);
+  const heroScene = page.locator(".hero-scene");
+  await expect(heroScene).toHaveCSS("animation-name", "scene-drift");
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  const startTransform = await heroScene.evaluate((element) => getComputedStyle(element).transform);
+  await page.evaluate(() => window.scrollTo({ top: window.innerHeight * .65, behavior: "instant" }));
+  await expect.poll(() => heroScene.evaluate((element) => getComputedStyle(element).transform))
+    .not.toBe(startTransform);
 
-  expect(scrolledTransform).not.toBe(startTransform);
+  for (const progress of [0, .25, .5, .75, 1]) {
+    await page.evaluate(async (fraction) => {
+      window.scrollTo({ top: window.innerHeight * fraction, behavior: "instant" });
+      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    }, progress);
+    await expect.poll(() => page.evaluate(() => {
+      const phone = document.querySelector(".demo-phone")!.getBoundingClientRect();
+      const caption = document.querySelector(".stage-caption")!.getBoundingClientRect();
+      return caption.top - phone.bottom;
+    }), { message: `The phone must stay above the caption at ${progress * 100}% scroll progress` })
+      .toBeGreaterThanOrEqual(8);
+  }
 });
 
 test("keeps navigation targets valid and reports the active section", async ({ page }) => {
@@ -87,7 +102,7 @@ test("synchronizes the selected theme with browser chrome", async ({ page }) => 
   await page.locator("[data-theme-toggle]").click();
 
   const expectedTheme = initialTheme === "light" ? "dark" : "light";
-  const expectedColor = expectedTheme === "light" ? "#ffffff" : "#10110f";
+  const expectedColor = expectedTheme === "light" ? "#f8f7f3" : "#10110f";
   await expect(root).toHaveAttribute("data-theme", expectedTheme);
   await expect(themeColor).toHaveAttribute("content", expectedColor);
   await expect(page.locator("[data-theme-toggle]")).toHaveAttribute(
@@ -119,4 +134,20 @@ test("mobile navigation opens, closes and preserves usable controls", async ({ p
   await page.keyboard.press("Escape");
   await expect(menu).not.toHaveAttribute("open", "");
   await expect(menuButton).toBeFocused();
+});
+
+
+test("hero interaction works with the keyboard and reduced motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const toggle = page.locator("[data-demo-toggle]");
+  await toggle.focus();
+  await page.keyboard.press("Enter");
+  await expect(toggle).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("[data-demo-phone]")).toHaveAttribute("data-active", "");
+  await expect(toggle).toHaveAccessibleName("Inspect UI layers");
+  await page.keyboard.press("Space");
+  await expect(toggle).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator("[data-demo-phone]")).not.toHaveAttribute("data-active");
+  await expect(toggle).toHaveAccessibleName("Inspect UI layers");
+  expect(await page.locator(".hero-scene").evaluate((element) => getComputedStyle(element).animationName)).toBe("none");
 });

@@ -1,0 +1,89 @@
+---
+import { skillGroups } from "../data/portfolio";
+
+const [core, ...supportingGroups] = skillGroups;
+---
+
+<section id="skills" class="skills-section" data-skills-section aria-labelledby="skills-title">
+  <div class="section-shell">
+    <div class="skills-heading">
+      <div>
+        <p class="eyebrow"><span>03</span> Skills & toolkit</p>
+        <h2 id="skills-title">MOBILE FIRST.<br /><em>BUILT ON SOLID GROUND.</em></h2>
+      </div>
+      <p class="skills-description">Android, Kotlin and Jetpack Compose are at the heart of my work. A broader toolkit helps me connect the interface to the systems behind it.</p>
+    </div>
+
+    <div class="skills-groups">
+      <div class="skills-core" aria-labelledby="core-skills-title">
+        <h3 id="core-skills-title">{core.title}</h3>
+        <ul class="core-skills" aria-label="Core technologies">
+          {core.skills.map((skill) => <li>{skill}</li>)}
+        </ul>
+      </div>
+
+      {supportingGroups.map((group) => (
+          <div class="skill-group">
+            <h3>{group.title}</h3>
+            <ul aria-label={`${group.title} technologies`}>
+              {group.skills.map((skill) => <li>{skill}</li>)}
+            </ul>
+          </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills-section {
+    padding-block: clamp(3.5rem, 6vw, 6rem);
+    border-block: 1px solid var(--line);
+    background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+  }
+  .skills-heading {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+    gap: 1.5rem var(--content-column-gap);
+    margin-bottom: 2rem;
+  }
+  h2 {
+    margin: 1.5rem 0 0;
+    font-size: var(--section-title-size);
+    line-height: 1.06;
+    letter-spacing: -.05em;
+  }
+  h2 em { color: var(--accent-text); font-style: normal; }
+  .skills-description { max-width: 30rem; margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.7; }
+  .skills-groups {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .skills-core, .skill-group {
+    min-width: 0;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+  }
+  h3 { margin: 0 0 1rem; color: var(--ink); font-size: .875rem; font-weight: 600; }
+  ul { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+  li {
+    padding: .5rem .75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-tag);
+    color: var(--ink);
+    background: var(--surface-raised);
+    font-size: .875rem;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  @media (max-width: 64rem) {
+    .skills-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 48rem) {
+    .skills-heading { grid-template-columns: 1fr; }
+    .skills-groups { grid-template-columns: 1fr; }
+  }
+</style>

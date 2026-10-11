@@ -32,7 +32,7 @@ const structuredData = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta id="theme-color" name="theme-color" content="#10110f" data-dark="#10110f" data-light="#ffffff" />
+    <meta id="theme-color" name="theme-color" content="#10110f" data-dark="#10110f" data-light="#f8f7f3" />
     <meta name="color-scheme" content="dark light" />
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
@@ -94,7 +94,7 @@ const structuredData = {
         root.style.colorScheme = theme;
         if (themeColor) {
           themeColor.content = theme === "light"
-            ? themeColor.dataset.light ?? "#ffffff"
+            ? themeColor.dataset.light ?? "#f8f7f3"
             : themeColor.dataset.dark ?? "#10110f";
         }
       };

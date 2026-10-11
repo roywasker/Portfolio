@@ -1,0 +1,228 @@
+---
+import { profile, projects } from "../data/portfolio";
+---
+
+<section id="top" class="hero" aria-labelledby="hero-title" data-hero>
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-shell section-shell">
+    <div class="hero-copy">
+      <p class="hero-kicker"><span aria-hidden="true"></span> ANDROID · KOTLIN · JETPACK COMPOSE</p>
+      <h1 id="hero-title"><span class="hero-title-intro">Hi, I’m {profile.name.split(" ")[0]}.</span>Mobile<br /> <em>Engineer.</em></h1>
+      <p class="hero-description">From architecture to the interaction in your hand.<br class="desktop-break" /> I build Android experiences with Kotlin, Jetpack Compose, and a product mindset.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#work">Explore my work <span aria-hidden="true">↗</span></a>
+        <a class="resume-link" href={profile.resume} target="_blank" rel="noreferrer">View résumé <span aria-hidden="true">↗</span></a>
+      </div>
+      <ul class="hero-stack" aria-label="Core technologies"><li>Kotlin</li><li>Jetpack Compose</li><li>Multiplatform</li></ul>
+    </div>
+
+    <div class="hero-stage" data-hero-stage>
+      <div class="stage-halo" aria-hidden="true"></div>
+      <div class="hero-scene" data-hero-scene>
+        <div class="editor-window" aria-hidden="true">
+          <div class="editor-toolbar"><span class="editor-dots"><i></i><i></i><i></i></span><span>MobileStudio</span><span>⌁</span></div>
+          <div class="editor-tab"><span class="kotlin-mark">K</span> PortfolioScreen.kt <span>×</span></div>
+          <div class="code-lines">
+            <div><b>01</b><span class="syntax-purple">@Composable</span></div>
+            <div><b>02</b><span class="syntax-purple">fun</span> <span class="syntax-lime">PortfolioScreen</span>() &#123;</div>
+            <div><b>03</b>  <span class="syntax-muted">// Ideas into interfaces.</span></div>
+            <div><b>04</b>  <span class="syntax-lime">Column</span>(</div>
+            <div><b>05</b>    modifier = Modifier</div>
+            <div><b>06</b>      .<span class="syntax-lime">fillMaxSize</span>()</div>
+            <div><b>07</b>      .<span class="syntax-lime">padding</span>(24.dp)</div>
+            <div><b>08</b>  ) &#123;</div>
+            <div class="code-selected"><b>09</b>    <span class="syntax-lime">ProfileHeader</span>()</div>
+            <div><b>10</b>    <span class="syntax-lime">ProjectList</span>()</div>
+            <div><b>11</b>  &#125;</div>
+            <div><b>12</b>&#125;</div>
+          </div>
+          <div class="editor-status"><span>◇ Kotlin</span><span>COMPOSE UI CONCEPT</span></div>
+        </div>
+        <div class="device-assembly">
+          <div class="demo-phone" data-demo-phone>
+            <div class="phone-top" aria-hidden="true"><span>9:41</span><span class="camera"></span><span>▮▮▮ ▰</span></div>
+            <div class="app-toolbar"><span class="app-monogram">rw.</span><span class="app-preview-label">PROJECT PREVIEW</span></div>
+            <div class="app-profile layout-region"><span class="layout-label" aria-hidden="true">Column / ProfileHeader</span><p>ENGINEER’S NOTEBOOK</p><h2>Ideas.<br />Built for <em>mobile.</em></h2><span>Kotlin. Compose. A little curiosity.</span></div>
+            {projects.slice(0, 2).map((project, index) => (
+              <a class="app-project layout-region" href={project.href} target="_blank" rel="noreferrer" aria-label={`View ${project.title} on GitHub (opens in a new tab)`}>
+                <span class="layout-label" aria-hidden="true">Row / ProjectCard</span>
+                <span class:list={["project-symbol", { "symbol-alt": index === 1 }]} aria-hidden="true">{project.title.charAt(0)}</span>
+                <div><strong>{project.title}</strong><span>View on GitHub</span></div>
+                <span aria-hidden="true">↗</span>
+              </a>
+            ))}
+            <span class="phone-home" aria-hidden="true"></span>
+          </div>
+        </div>
+        <div class="build-note" aria-hidden="true"><span>↳</span> Architecture meets interaction.</div>
+      </div>
+      <div class="stage-caption"><button type="button" class="inspect-toggle" data-demo-toggle aria-pressed="false" aria-label="Inspect UI layers"><span aria-hidden="true">▱</span><span data-demo-label>Inspect UI layers</span><span class="toggle-track" aria-hidden="true"><i></i></span></button><span>INTERACTIVE UI STUDY</span></div>
+    </div>
+    <div class="hero-foot"><p>Currently building at <strong>{profile.company}</strong></p><a href="#about">A little about me <span aria-hidden="true">↓</span></a><p class="hero-foot-note">ARCHITECTURE → STATE → UI</p></div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; isolation: isolate; overflow: clip; min-height: 100svh; }
+  .hero-shell { min-height: 100svh; padding-top: 8rem; display: grid; grid-template-columns: 1.12fr 1fr; align-items: center; column-gap: 1rem; }
+  .hero-grid { position: absolute; z-index: -2; inset: 0; opacity: .3; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse at 75% 45%, #000, transparent 65%); }
+  .hero-copy { position: relative; z-index: 2; padding-block: 3rem; }
+  .hero-kicker { display: flex; align-items: center; gap: .65rem; margin: 0 0 2.2rem; color: var(--muted); font-size: .75rem; letter-spacing: .09em; text-transform: uppercase; }
+  .hero-kicker > span { width: .4rem; height: .4rem; flex-shrink: 0; border-radius: 50%; background: var(--accent-text); box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 50%, transparent); }
+  h1 { margin: 0; font-size: clamp(3.8rem, 6.75vw, 6.7rem); font-weight: 650; line-height: 1.02; letter-spacing: -.075em; }
+  h1 em { color: var(--accent-text); font-style: normal; font-weight: 650; letter-spacing: -.075em; }
+  .hero-title-intro { display: block; margin-bottom: .65em; color: var(--ink); font-size: .36em; font-weight: 500; letter-spacing: -.04em; line-height: 1.2; }
+  .hero-description { max-width: 30rem; margin: 2rem 0; color: var(--muted); font-size: clamp(.9rem, 1.1vw, 1.08rem); line-height: 1.85; letter-spacing: -.015em; }
+  .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1.8rem; }
+  .hero-actions .button { min-height: 3.6rem; padding-left: 1.4rem; font-size: .8rem; }
+  .resume-link { padding-block: .9rem; color: var(--ink); font-size: .78rem; border-bottom: 1px solid var(--line); transition: border-color .2s; }
+  .resume-link span { margin-left: .6rem; }
+  .resume-link:hover { border-color: var(--accent-text); }
+  .hero-stack { display: flex; flex-wrap: wrap; gap: .6rem 1.1rem; padding: 0; margin: 2.5rem 0 0; list-style: none; color: var(--muted); font: .75rem ui-monospace, monospace; }
+  .hero-stack li::before { content: "+"; color: var(--accent-text); margin-right: .45rem; }
+  .hero-stage { position: relative; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4rem; padding-top: 2rem; perspective: 1200px; }
+  .stage-halo { position: absolute; inset: 0 -15%; z-index: -1; background: radial-gradient(ellipse, color-mix(in srgb, var(--accent) 12%, transparent), transparent 65%); }
+  .hero-scene { position: relative; flex-shrink: 0; width: 100%; height: 31rem; transform-origin: center bottom; }
+  .editor-window { position: absolute; top: 0; left: -2rem; width: 26rem; height: 25.5rem; overflow: hidden; border: 1px solid var(--line); border-radius: .8rem; color: var(--ink); background: var(--surface); box-shadow: 0 30px 70px #0002; transform: perspective(1000px) rotateY(8deg) rotateZ(-3deg); }
+  .editor-toolbar { display: flex; align-items: center; justify-content: space-between; padding: .85rem 1rem; border-bottom: 1px solid var(--line); color: var(--muted); font: .6rem ui-monospace, monospace; }
+  .editor-dots { display: flex; gap: .3rem; }
+  .editor-dots i { width: .4rem; height: .4rem; border-radius: 50%; background: var(--muted); opacity: .6; }
+  .editor-tab { display: flex; align-items: center; gap: .55rem; width: fit-content; padding: .8rem 1rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--accent-text); font: .65rem ui-monospace, monospace; }
+  .editor-tab > span:last-child { margin-left: 1rem; color: var(--muted); }
+  .kotlin-mark { color: var(--accent-text); font-weight: 900; }
+  .code-lines { padding-block: 1.15rem; font: .67rem/1.9 ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .code-lines > div { white-space: pre; padding-right: .6rem; }
+  .code-lines b { display: inline-block; width: 2.5rem; padding-right: .7rem; text-align: right; font-weight: 400; color: var(--muted); }
+  .syntax-purple { color: var(--violet); }
+  .syntax-lime { color: var(--accent-text); }
+  .syntax-muted { color: var(--muted); }
+  .code-selected { background: color-mix(in srgb, var(--accent) 9%, transparent); border-left: 2px solid var(--accent-text); }
+  .editor-status { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; padding: .7rem 1rem; border-top: 1px solid var(--line); color: var(--muted); font: .5rem ui-monospace, monospace; }
+  .device-assembly { position: absolute; right: -.8rem; top: 4rem; width: 15.5rem; height: 27rem; transform: rotateX(var(--tilt-x, 4deg)) rotateY(var(--tilt-y, -9deg)) rotateZ(8deg); transition: transform .45s ease-out; }
+  .demo-phone { --phone-accent: #c8ff36; position: relative; height: 100%; padding: .75rem 1rem 0; overflow: hidden; border: 5px solid #30362e; border-radius: 2.1rem; color: #eff3e9; background: #151a16; box-shadow: inset 0 0 0 1px #647054, 14px 24px 45px #0005, 2px 2px 0 1px #7b856d; }
+  :global([data-theme="light"]) .demo-phone { --phone-accent: #b8dfcd; }
+  .phone-top { display: flex; align-items: center; justify-content: space-between; height: 1rem; color: #d9e1ce; font-size: .5rem; }
+  .camera { width: .45rem; height: .45rem; border-radius: 50%; background: #050705; box-shadow: 0 0 0 2px #363c34; }
+  .app-toolbar { display: flex; align-items: center; justify-content: space-between; margin-top: 1.3rem; color: #d2ecad; font-size: .8rem; }
+  .app-preview-label { color: #b8c5a6; font: .45rem ui-monospace, monospace; letter-spacing: .08em; }
+  .app-monogram { font-size: 1.2rem; font-weight: 800; letter-spacing: -.09em; }
+  .app-profile { margin: 1.1rem 0 1.35rem; }
+  .app-profile > p { margin: 0 0 .6rem; color: #b8c5a6; font: .43rem ui-monospace, monospace; letter-spacing: .1em; }
+  .app-profile h2 { margin: 0 0 .6rem; font-size: 1.8rem; line-height: 1.08; letter-spacing: -.055em; font-weight: 600; }
+  .app-profile h2 em { font-style: normal; color: var(--phone-accent); }
+  .app-profile > span:last-child { color: #b8c5a6; font-size: .52rem; }
+  .app-project { color: #eff3e9; min-height: 64px; display: flex; align-items: center; gap: .6rem; padding: .7rem .55rem; margin-top: .55rem; border: 1px solid #3b4436; border-radius: .7rem; background: #21291f; }
+  .app-project:hover, .app-project:focus-visible { background: #303e28; border-color: var(--phone-accent); }
+  .app-project:focus-visible { outline: 2px solid var(--phone-accent); outline-offset: 3px; }
+  .project-symbol { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: .5rem; background: var(--phone-accent); color: #19220e; font-size: 1.2rem; }
+  .symbol-alt { background: #b6a6ff; }
+  .app-project > div { flex: 1; }
+  .app-project strong { display: block; font-size: .65rem; font-weight: 600; }
+  .app-project div > span { display: block; color: #b8c5a6; font-size: .45rem; margin-top: .2rem; }
+  .app-project > span:last-child { color: #b8c5a6; font-size: .7rem; }
+  .phone-home { position: absolute; bottom: .55rem; left: 35%; width: 30%; height: 3px; border-radius: 1rem; background: #b8c5a6; }
+  .layout-region { position: relative; outline: 1px dashed transparent; outline-offset: 4px; transition: outline-color .3s, background-color .3s; }
+  .layout-label { position: absolute; top: -11px; left: 0; z-index: 2; padding: 2px 4px; background: var(--phone-accent); color: #17200e; font: .4rem ui-monospace, monospace; opacity: 0; transition: opacity .3s; }
+  .demo-phone[data-active] .layout-region { outline-color: var(--phone-accent); background: #c8ff360c; }
+  .demo-phone[data-active] .layout-label { opacity: 1; }
+  .build-note { position: absolute; bottom: 1.6rem; left: 0; max-width: 11rem; color: var(--muted); font: .63rem/1.7 ui-monospace, monospace; }
+  .build-note > span { display: block; color: var(--accent-text); font-size: 1.5rem; }
+  .stage-caption { position: relative; flex-shrink: 0; width: 100%; min-height: 44px; display: flex; justify-content: space-between; align-items: center; gap: .6rem; color: var(--muted); }
+  .stage-caption > span { font: .45rem ui-monospace, monospace; letter-spacing: .07em; }
+  .inspect-toggle { display: inline-flex; align-items: center; gap: .6rem; min-height: 44px; padding: .6rem .8rem; border: 1px solid var(--line); border-radius: var(--radius-control); color: var(--ink); background: var(--surface); transition: var(--interaction-transition); cursor: pointer; font-size: .8125rem; }
+  .inspect-toggle:is(:hover, :focus-visible) { border-color: var(--accent-text); background: var(--surface-raised); box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+  .inspect-toggle:active { transform: translateY(0); box-shadow: none; }
+  .toggle-track { width: 1.7rem; height: 1rem; padding: 3px; border-radius: 1rem; background: var(--muted); transition: background .2s; }
+  .toggle-track i { display: block; width: .625rem; height: .625rem; border-radius: 50%; background: var(--bg); transition: transform .2s; }
+  .inspect-toggle[aria-pressed="true"] .toggle-track { background: var(--accent-text); }
+  .inspect-toggle[aria-pressed="true"] .toggle-track i { transform: translateX(.65rem); }
+  .hero-foot { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 2.5rem; padding: 1.4rem 0; border-top: 1px solid var(--line); font-size: .75rem; color: var(--muted); }
+  .hero-foot p { margin: 0; }
+  .hero-foot strong { color: var(--ink); font-weight: 500; }
+  .hero-foot a { color: var(--ink); padding: .5rem; }
+  .hero-foot a span { margin-left: 1rem; }
+  .hero-foot-note { font-size: .55rem; letter-spacing: .12em; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-copy { animation: arrive .9s ease-out both; }
+    .device-assembly { animation: materialize 1.2s cubic-bezier(.2,.7,.2,1) both; }
+    @supports (animation-timeline: scroll()) {
+      .hero-scene { animation: scene-drift 1ms linear both; animation-timeline: scroll(root block); animation-range: 0 100svh; }
+    }
+  }
+  @keyframes arrive { from { opacity: 0; translate: 0 20px; } to { opacity: 1; translate: 0 0; } }
+  @keyframes materialize { from { opacity: 0; translate: 0 35px; } to { opacity: 1; translate: 0 0; } }
+  @keyframes scene-drift { to { transform: translateY(-32px) rotate(-3deg); } }
+  @media (max-width: 70rem) {
+    .hero-shell { grid-template-columns: 1fr 1fr; column-gap: 2rem; }
+    h1 { font-size: clamp(3.5rem, 7vw, 5.7rem); }
+    .editor-window { width: 22rem; left: -1rem; }
+    .device-assembly { right: -.5rem; }
+    .desktop-break { display: none; }
+    .build-note { max-width: 8rem; }
+    .stage-caption > span { display: none; }
+  }
+  @media (max-width: 58rem) {
+    .hero-shell { grid-template-columns: 1fr; padding-top: 7rem; }
+    .hero-copy { padding: 1.5rem 0 0; }
+    h1 { font-size: clamp(4rem, 13vw, 7rem); }
+    .hero-kicker { margin-bottom: 1.3rem; font-size: .75rem; }
+    .hero-description { margin-block: 1.5rem; max-width: 28rem; }
+    .hero-stack { margin-top: 1.8rem; }
+    .hero-stage { margin-top: 3rem; padding-top: 0; }
+    .hero-scene { width: min(100%, 29rem); height: 31rem; animation: none; }
+    .editor-window { left: 0; width: 24rem; }
+    .device-assembly { right: 0; }
+    .hero-foot { flex-wrap: wrap; margin-top: 1.8rem; }
+    .hero-foot-note { display: none; }
+    .stage-caption > span { display: block; }
+  }
+  @media (max-width: 48rem) {
+    .hero-shell { padding-top: 6.5rem; }
+    .hero-copy { padding-top: 1rem; }
+    .hero-stage { height: 25rem; margin-top: 1.5rem; gap: 1rem; }
+    .hero-scene { width: min(100%, 25rem); height: 21rem; }
+    .editor-window { top: 1.5rem; left: 0; width: 100%; height: 16rem; transform: rotate(-4deg); }
+    .code-lines > div:nth-child(n+8) { display: none; }
+    .device-assembly { top: .25rem; left: 50%; right: auto; width: 15.5rem; height: 27rem; translate: -50% 0; scale: .72; transform: rotateZ(4deg); transform-origin: top center; }
+    .build-note, .stage-caption > span { display: none; }
+    .stage-caption { justify-content: center; }
+    .hero-stack { margin-top: 1.25rem; gap: .6rem 1rem; }
+    .hero-foot { margin-top: .75rem; padding-block: 1rem; }
+    .hero-actions { gap: 1rem; }
+    .hero-actions .button { padding-left: 1rem; gap: .7rem; font-size: .8125rem; }
+    .resume-link { font-size: .8125rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .device-assembly { transform: rotateZ(-4deg); }
+    .hero-scene { animation: none; transform: none; }
+  }
+</style>
+
+<script>
+  const stage = document.querySelector<HTMLElement>("[data-hero-stage]");
+  const phone = document.querySelector<HTMLElement>("[data-demo-phone]");
+  const toggle = document.querySelector<HTMLButtonElement>("[data-demo-toggle]");
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
+
+  toggle?.addEventListener("click", () => {
+    const active = toggle.getAttribute("aria-pressed") !== "true";
+    toggle.setAttribute("aria-pressed", String(active));
+    phone?.toggleAttribute("data-active", active);
+  });
+
+  stage?.addEventListener("pointermove", (event) => {
+    if (reducedMotion.matches || !finePointer.matches) return;
+    const bounds = stage.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - .5;
+    const y = (event.clientY - bounds.top) / bounds.height - .5;
+    stage.style.setProperty("--tilt-x", `${4 - y * 8}deg`);
+    stage.style.setProperty("--tilt-y", `${-9 + x * 12}deg`);
+  });
+  const resetTilt = () => {
+    stage?.style.removeProperty("--tilt-x");
+    stage?.style.removeProperty("--tilt-y");
+  };
+  stage?.addEventListener("pointerleave", resetTilt);
+  reducedMotion.addEventListener("change", resetTilt);
+</script>

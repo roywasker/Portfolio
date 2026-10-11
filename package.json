@@ -8,10 +8,13 @@
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro check && ASTRO_TELEMETRY_DISABLED=1 astro build",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
-    "test:e2e": "playwright test",
+    "test:e2e": "npm run build && playwright test",
+    "test:contracts": "npm run build && playwright test --project=contracts",
+    "test:types": "tsc --project tsconfig.tests.json",
+    "test:report": "playwright show-report",
     "test:lighthouse": "node scripts/lighthouse.mjs",
     "screenshots": "npm run build && node scripts/capture-screenshots.mjs",
-    "qa": "npm run build && npm run test:e2e && npm run test:lighthouse"
+    "qa": "npm run test:types && npm run test:e2e && npm run test:lighthouse"
   },
   "dependencies": {
     "astro": "7.3.3"

@@ -94,29 +94,21 @@ export const skillGroups = [
   {
     title: "Android Core",
     number: "01",
-    skills: ["Kotlin", "Jetpack Compose", "Android", "Coroutines"],
-    angle: "0deg",
-    angleReverse: "0deg",
+    skills: ["Android", "Kotlin", "Jetpack Compose", "Coroutines"],
   },
   {
     title: "Multi-platform",
     number: "02",
     skills: ["KMP", "Gradle", "Firebase"],
-    angle: "90deg",
-    angleReverse: "-90deg",
   },
   {
     title: "Backend",
     number: "03",
     skills: ["Java", "Spring Boot", "REST"],
-    angle: "180deg",
-    angleReverse: "-180deg",
   },
   {
     title: "Product craft",
     number: "04",
     skills: ["Git", "Figma", "Postman"],
-    angle: "270deg",
-    angleReverse: "-270deg",
   },
 ] as const;

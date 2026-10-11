@@ -50,7 +50,7 @@ import { navigation, profile } from "../data/portfolio";
     border: 1px solid var(--line);
     border-radius: 999px;
     background: color-mix(in srgb, var(--bg) 76%, transparent);
-    box-shadow: 0 12px 36px color-mix(in srgb, var(--ink) 8%, transparent);
+    box-shadow: var(--shadow-card);
     backdrop-filter: blur(18px) saturate(140%);
     transition: transform .35s ease, background-color .3s ease;
   }
@@ -101,7 +101,7 @@ import { navigation, profile } from "../data/portfolio";
   .desktop-nav a[aria-current="location"] {
     color: var(--accent-ink);
     background: var(--accent);
-    box-shadow: 0 8px 22px color-mix(in srgb, var(--accent) 28%, transparent);
+    box-shadow: var(--shadow-card);
     font-weight: 820;
     transform: translateY(-1px);
   }
@@ -123,11 +123,12 @@ import { navigation, profile } from "../data/portfolio";
     color: var(--ink);
     background: var(--surface);
     cursor: pointer;
-    transition: color .25s ease, background-color .25s ease, transform .25s ease;
+    transition: var(--interaction-transition);
   }
 
   .theme-toggle:hover,
-  .theme-toggle:focus-visible { color: var(--accent-strong); transform: rotate(8deg); }
+  .theme-toggle:focus-visible { color: var(--accent-text); border-color: var(--accent-text); background: var(--surface-raised); transform: translateY(-2px); }
+  .theme-toggle:active { transform: translateY(0); }
 
   .theme-icon {
     width: 1.2rem;
@@ -192,7 +193,7 @@ import { navigation, profile } from "../data/portfolio";
       border: 1px solid var(--line);
       border-radius: 1.5rem;
       background: var(--bg);
-      box-shadow: 0 20px 70px color-mix(in srgb, var(--ink) 18%, transparent);
+      box-shadow: var(--shadow-card-hover);
       transform: translateX(-50%);
       animation: menu-enter .28s cubic-bezier(.2, .75, .2, 1) both;
     }
@@ -213,7 +214,7 @@ import { navigation, profile } from "../data/portfolio";
       border-radius: 1rem;
       color: var(--accent-ink);
       background: var(--accent);
-      box-shadow: 0 10px 26px color-mix(in srgb, var(--accent) 22%, transparent);
+      box-shadow: var(--shadow-card);
       font-weight: 820;
     }
     .mobile-menu nav a[aria-current="location"] small { color: currentColor; }
