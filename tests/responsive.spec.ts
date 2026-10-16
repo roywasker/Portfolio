@@ -40,6 +40,7 @@ for (const theme of ["dark", "light"] as const) {
     const clipped = await page.locator([
       "#hero-title", ".hero-description", ".hero-actions", ".hero-stack",
       ".about-intro", ".about-copy", ".about-experience",
+      ".engineering-story", ".engineering-examples li", ".story-next a",
       ".section-heading h2", ".project-main", ".project-footer",
       ".skills-heading", ".skills-core", ".skill-group",
       ".contact-email", ".linkedin-contact", ".email-link", ".footer-meta",
@@ -66,12 +67,18 @@ for (const theme of ["dark", "light"] as const) {
     if ((page.viewportSize()?.width ?? 0) <= 768) {
       const stageHeight = await page.locator(".hero-stage").evaluate((element) => element.getBoundingClientRect().height);
       expect(stageHeight).toBeLessThanOrEqual(420);
-      const deviceBounds = await page.locator(".demo-phone").evaluate((element) => {
+      await expect(page.locator(".demo-phone")).toBeHidden();
+      await expect(page.locator(".stage-caption")).toBeHidden();
+      await expect(page.locator(".editor-window")).toBeVisible();
+      const deviceBounds = await page.locator(".editor-window").evaluate((element) => {
         const bounds = element.getBoundingClientRect();
         return { left: bounds.left, right: bounds.right, viewportWidth: innerWidth };
       });
-      expect(deviceBounds.left, "The phone must remain fully inside the mobile viewport").toBeGreaterThanOrEqual(0);
+      expect(deviceBounds.left, "MobileStudio must remain fully inside the mobile viewport").toBeGreaterThanOrEqual(0);
       expect(deviceBounds.right).toBeLessThanOrEqual(deviceBounds.viewportWidth);
+    } else {
+      await expect(page.locator(".demo-phone")).toBeVisible();
+      await expect(page.locator(".editor-window")).toBeVisible();
     }
     expect(await page.locator("#skills").evaluate((element) => getComputedStyle(element).position)).not.toBe("sticky");
     await expect(page.locator(".app-project")).toHaveCount(2);

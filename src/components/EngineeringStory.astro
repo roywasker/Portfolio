@@ -1,0 +1,76 @@
+---
+const examples = [
+  {
+    context: "ANDROID TV · INTERACTION",
+    title: "Keep the next action within reach.",
+    description: "Good navigation makes the next step clear. On Android TV, that means coordinating focus and scrolling so the selected item stays in view. On mobile, it means shaping touch interactions around the same sense of clarity and control.",
+    takeaway: "The detail that matters: where focus goes next, and whether the viewer can see it.",
+  },
+  {
+    context: "ANDROID MOBILE · PLAYBACK",
+    title: "Treat state and actions differently.",
+    description: "I think about what an interface shows separately from what a user asks it to do. A media player makes this distinction concrete: playback state describes the screen, while pause and seek are actions. Kotlin flows and ViewModels help give each a clear responsibility.",
+    takeaway: "The detail that matters: a playback command is an action, not just another screen state.",
+  },
+  {
+    context: "SHARED MODULES · PLATFORM FIT",
+    title: "Reuse the foundation. Respect the device.",
+    description: "I look for useful boundaries between shared logic, reusable UI and platform-specific behavior. Core and Compose UI modules can provide a common foundation, while each app adapts navigation and controls to its device.",
+    takeaway: "The detail that matters: sharing code without assuming every device should behave the same.",
+  },
+];
+---
+
+<div class="engineering-story" aria-labelledby="engineering-story-title">
+  <div class="story-heading">
+    <div>
+      <p class="story-label">EXPERIENCE IN PRACTICE</p>
+      <h3 id="engineering-story-title">The details behind<br />a simple experience.</h3>
+    </div>
+    <p>Three principles that shape how I approach Android engineering: clear interactions, explicit state and thoughtful reuse.</p>
+  </div>
+  <ol class="engineering-examples">
+    {examples.map((example, index) => (
+      <li>
+        <span class="example-number" aria-hidden="true">0{index + 1}</span>
+        <div>
+          <p class="story-label">{example.context}</p>
+          <h4>{example.title}</h4>
+          <p class="example-description">{example.description}</p>
+          <p class="example-takeaway">{example.takeaway}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+  <div class="story-next">
+    <p>Explore these engineering ideas in my personal projects.</p>
+    <div>
+      <a href="/work/trendy/">Trendy: shared mobile architecture <span aria-hidden="true">↗</span></a>
+      <a href="/work/my-passwords/">MyPasswords: local data &amp; access <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .engineering-story { grid-column: 1 / -1; min-width: 0; padding-top: var(--section-content-gap); border-top: 1px solid var(--line); }
+  .story-heading { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem var(--content-column-gap); align-items: end; margin-bottom: 2rem; }
+  .story-label { margin: 0; color: var(--muted); font: 500 .75rem/1.6 ui-monospace, monospace; letter-spacing: .06em; }
+  h3 { margin: .75rem 0 0; color: var(--ink); font-size: clamp(1.75rem, 3vw, 2.6rem); line-height: 1.15; letter-spacing: -.04em; }
+  .story-heading > p, .story-next > p { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.75; max-width: 36rem; }
+  .engineering-examples { list-style: none; padding: 0; margin: 0; }
+  li { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 1.5rem; padding-block: 1.75rem; border-top: 1px solid var(--line); }
+  .example-number { color: var(--accent-text); font: 500 1.25rem/1.6 ui-monospace, monospace; }
+  h4 { margin: .6rem 0 .75rem; font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.35; letter-spacing: -.025em; }
+  .example-description { margin: 0; max-width: 68ch; color: var(--muted); line-height: 1.75; font-size: 1rem; }
+  .example-takeaway { margin: 1rem 0 0; max-width: 68ch; color: var(--ink); line-height: 1.65; font-size: .9375rem; }
+  .story-next { padding-top: 1.75rem; border-top: 1px solid var(--line); }
+  .story-next > div { display: flex; flex-wrap: wrap; gap: .25rem 2rem; margin-top: .75rem; }
+  a { display: inline-flex; align-items: center; gap: .75rem; min-height: 44px; padding-block: .5rem; color: var(--ink); font-size: .9375rem; text-decoration: underline; text-underline-offset: .25em; }
+  a:hover { color: var(--accent-text); }
+  a span { color: var(--accent-text); }
+  @media (max-width: 48rem) {
+    .story-heading { grid-template-columns: 1fr; gap: 1rem; }
+    li { grid-template-columns: 1.75rem minmax(0, 1fr); gap: .75rem; }
+    .story-next > div { flex-direction: column; align-items: flex-start; }
+  }
+</style>

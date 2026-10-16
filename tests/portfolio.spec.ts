@@ -140,6 +140,12 @@ test("mobile navigation opens, closes and preserves usable controls", async ({ p
 test("hero interaction works with the keyboard and reduced motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   const toggle = page.locator("[data-demo-toggle]");
+  if ((page.viewportSize()?.width ?? 0) <= 768) {
+    await expect(toggle).toBeHidden();
+    await expect(page.locator("[data-demo-phone]")).toBeHidden();
+    await expect(page.locator(".editor-window")).toBeVisible();
+    return;
+  }
   await toggle.focus();
   await page.keyboard.press("Enter");
   await expect(toggle).toHaveAttribute("aria-pressed", "true");

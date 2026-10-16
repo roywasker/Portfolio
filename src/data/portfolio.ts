@@ -7,6 +7,8 @@ export type Project = {
   poster: string;
   accent: string;
   lightAccent: string;
+  caseStudy?: string;
+  featured?: boolean;
 };
 
 export const profile = {
@@ -35,6 +37,8 @@ export const navigation = [
 export const projects: Project[] = [
   {
     title: "Trendy",
+    featured: true,
+    caseStudy: "/work/trendy/",
     label: "Cross-platform product",
     description:
       "A Kotlin Multiplatform experience built for Android and iOS, with shared product logic and a Compose-first interface.",
@@ -43,6 +47,19 @@ export const projects: Project[] = [
     poster: "/images/projects/trendy.avif",
     accent: "#c8ff36",
     lightAccent: "#ffb199",
+  },
+  {
+    title: "MyPasswords",
+    featured: true,
+    label: "Local Android vault",
+    description:
+      "An Android password vault with biometric access, encrypted local storage, and tools for organizing credentials, reviewing password health and managing history.",
+    stack: ["Jetpack Compose", "Room", "Biometrics"],
+    href: "https://github.com/roywasker/My_Passwords",
+    caseStudy: "/work/my-passwords/",
+    poster: "/images/projects/my-passwords.avif",
+    accent: "#77d8cc",
+    lightAccent: "#9cddd4",
   },
   {
     title: "Poker App",

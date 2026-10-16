@@ -1,6 +1,9 @@
 import { defineConfig } from "@playwright/test";
 
 const localBrowser = process.env.CI ? {} : { channel: "chrome" as const };
+const qaPort = Number(process.env.QA_PORT ?? 4173);
+if (!Number.isInteger(qaPort) || qaPort < 1024 || qaPort > 65535) throw new Error('QA_PORT must be an integer between 1024 and 65535');
+const baseURL = `http://127.0.0.1:${qaPort}`;
 
 export default defineConfig({
   testDir: "./tests",
@@ -10,7 +13,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : [["list"], ["html", { open: "never" }]],
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL,
     colorScheme: "dark",
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
@@ -37,8 +40,8 @@ export default defineConfig({
     ].map(project => ({ ...project, testIgnore: /contracts\.spec\.ts/ })),
   ],
   webServer: {
-    command: "npm run preview -- --host 127.0.0.1 --port 4173 --ignore-lock",
-    url: "http://127.0.0.1:4173",
+    command: `npm run preview -- --host 127.0.0.1 --port ${qaPort} --ignore-lock`,
+    url: baseURL,
     reuseExistingServer: false,
     timeout: 120_000,
   },

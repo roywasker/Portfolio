@@ -12,7 +12,7 @@ test("all projects render their content and decode their responsive images", asy
     await card.scrollIntoViewIfNeeded();
     await expect(card).toContainText(project.description);
     await expect(card.locator("li")).toHaveText(project.stack);
-    await expect(card.getByRole("link")).toHaveAttribute("href", project.href);
+    await expect(card.getByRole("link")).toHaveAttribute("href", project.caseStudy ?? project.href);
     const image = card.getByRole("img", { name: `${project.title} project preview` });
     await expect(image).toBeVisible();
     expect(await image.evaluate(async (element: HTMLImageElement) => {
@@ -24,11 +24,15 @@ test("all projects render their content and decode their responsive images", asy
 
 test("project and resume actions open the intended destinations in a new tab", async ({ page, context }) => {
   // Fulfill external navigation locally: do not rely on GitHub/Drive or user accounts.
-  for (const destination of [projects[0].href, profile.resume]) {
+  for (const destination of [...projects.map(project => project.href), profile.resume]) {
     await context.route(destination, route => route.fulfill({ contentType: "text/html", body: "<title>Destination</title>" }));
   }
   await page.goto("/");
-  for (const selector of [".app-project", ".project-card a", ".resume-link"]) {
+  for (const selector of [".app-project", ".project-card a[target=\"_blank\"]", ".resume-link"]) {
+    if (selector === ".app-project" && (page.viewportSize()?.width ?? 0) <= 768) {
+      await expect(page.locator(selector).first()).toBeHidden();
+      continue;
+    }
     const link = page.locator(selector).first();
     const destination = await link.getAttribute("href");
     const popupPromise = page.waitForEvent("popup");
@@ -120,3 +124,28 @@ test("direct section links leave their titles below the fixed navigation", async
     }).toBeGreaterThanOrEqual(0);
   }
 });
+
+for (const javaScriptEnabled of [true, false]) {
+  test.describe(`fresh fragment entry with JavaScript ${javaScriptEnabled ? "enabled" : "disabled"}`, () => {
+    test.use({ javaScriptEnabled });
+
+    test("section headings remain below navigation after layout settles", async ({ page }) => {
+      for (const id of ["about", "work", "skills", "contact"]) {
+        // Leave the document so each URL exercises an initial fragment load.
+        await page.goto("about:blank");
+        await page.goto(`/#${id}`);
+        await page.evaluate(async () => {
+          await document.fonts.ready;
+          await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+        });
+        const heading = page.locator(`#${id}`).locator(id === "contact" ? ".eyebrow" : `#${id}-title`);
+        await expect(heading).toBeInViewport();
+        await expect.poll(async () => {
+          const bounds = await heading.boundingBox();
+          const header = await page.locator(".site-header").boundingBox();
+          return bounds && header ? bounds.y - header.y - header.height : -1;
+        }, { message: `#${id} heading must clear the fixed header` }).toBeGreaterThanOrEqual(0);
+      }
+    });
+  });
+}

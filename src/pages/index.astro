@@ -3,6 +3,7 @@ import Hero from "../components/Hero.astro";
 import Footer from "../components/Footer.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import Skills from "../components/Skills.astro";
+import EngineeringStory from "../components/EngineeringStory.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { profile, projects } from "../data/portfolio";
 
@@ -22,8 +23,9 @@ const description = "Android engineer specializing in Kotlin, Jetpack Compose an
         <h2 id="about-title">CURIOUS BY NATURE.<br /><em>ENGINEER BY CRAFT.</em></h2>
       </div>
       <div class="about-copy" data-reveal>
-        <p class="lead">I’m {profile.name}, an Android engineer who enjoys turning a complicated problem into something simple to use.</p>
-        <p>I’m a Computer Science graduate, building with Kotlin and Jetpack Compose at {profile.company}. Outside my day-to-day work, I explore Kotlin Multiplatform, backend systems and open source — always looking for a better way to bring an idea to life.</p>
+        <p class="lead">I’m {profile.name}. I build Android experiences where the details of state, navigation and interaction matter.</p>
+        <p>My experience spans Android mobile and TV, using Kotlin and Jetpack Compose. I think beyond individual screens: how people move through an app, how it responds to their actions, and how its architecture supports a consistent experience.</p>
+        <p>I’m a Computer Science graduate. In my own projects, I explore shared Android and iOS experiences with Kotlin Multiplatform, local data and backend systems.</p>
         <a href={`mailto:${profile.email}`}>Let’s talk <span aria-hidden="true">↗</span></a>
       </div>
       <dl class="about-experience" data-reveal>
@@ -31,6 +33,7 @@ const description = "Android engineer specializing in Kotlin, Jetpack Compose an
         <div><dt>Since</dt><dd>{profile.employedSince}</dd></div>
         <div><dt>Foundation</dt><dd>Computer Science graduate</dd></div>
       </dl>
+      <EngineeringStory />
     </div>
   </section>
 
@@ -39,42 +42,15 @@ const description = "Android engineer specializing in Kotlin, Jetpack Compose an
       <p class="eyebrow"><span>02</span> Selected work</p>
       <div>
         <h2 id="work-title">PRODUCTS WITH<br /><em>A POINT OF VIEW.</em></h2>
-        <p>Real product screens bring each project into view, supported by its purpose and the engineering choices behind it.</p>
+        <p>Start with two mobile experiences: shared commerce in Trendy and a local Android vault in MyPasswords. Explore the interfaces and the decisions behind them.</p>
       </div>
     </div>
 
     <div class="project-list">
-      {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
-      <a
-        class="all-work-link"
-        href="https://github.com/roywasker?tab=repositories"
-        target="_blank"
-        rel="noreferrer"
-        data-reveal="project"
-        style={`--delay: ${projects.length * 70}ms;`}
-      >
-        <div class="github-card-visual" aria-hidden="true">
-          <span class="github-card-index">0{projects.length + 1}</span>
-          <p>OPEN<br /><em>SOURCE</em></p>
-          <span class="github-card-signal"></span>
-        </div>
-
-        <div class="github-card-main">
-          <p class="github-card-label">Developer profile</p>
-          <strong>Explore GitHub</strong>
-          <p class="github-card-description">More repositories, experiments and practical learning beyond the selected projects.</p>
-        </div>
-
-        <div class="github-card-footer">
-          <ul aria-label="GitHub profile content">
-            <li>Repositories</li>
-            <li>Experiments</li>
-            <li>Open source</li>
-          </ul>
-          <i aria-hidden="true">↗</i>
-        </div>
-        <span class="visually-hidden">Opens Roy Wasker’s GitHub repositories in a new tab</span>
-      </a>
+      {projects.map((project, index) => <>
+        {index === 2 && <p class="more-projects-label">More projects &amp; experiments</p>}
+        <ProjectCard project={project} index={index} />
+      </>)}
     </div>
   </section>
 

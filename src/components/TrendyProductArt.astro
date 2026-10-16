@@ -1,0 +1,24 @@
+---
+interface Props { kind: string }
+const { kind } = Astro.props;
+---
+<svg viewBox="0 0 100 100" fill="none" aria-hidden="true" width="100" height="100">
+  <ellipse cx="50" cy="85" rx="30" ry="5" fill="#171a17" opacity=".12" />
+  {kind === 'earbuds' ? <>
+    <rect x="19" y="49" width="62" height="33" rx="15" fill="#fff" stroke="#30352e" stroke-width="2" />
+    <path d="M21 60h58" stroke="#d1d5c9" stroke-width="2" /><circle cx="50" cy="70" r="2" fill="#246b58" />
+    <path d="M34 22c-9 0-13 5-13 11s5 10 12 10v12a4 4 0 0 0 8 0V31c0-5-2-9-7-9Z" fill="#fff" stroke="#30352e" stroke-width="2" />
+    <path d="M66 22c9 0 13 5 13 11s-5 10-12 10v12a4 4 0 0 1-8 0V31c0-5 2-9 7-9Z" fill="#fff" stroke="#30352e" stroke-width="2" />
+    <ellipse cx="29" cy="32" rx="3" ry="5" fill="#30352e" /><ellipse cx="71" cy="32" rx="3" ry="5" fill="#30352e" />
+  </> : kind === 'speaker' ? <>
+    <rect x="25" y="18" width="50" height="64" rx="14" fill="#30352e" />
+    <rect x="30" y="24" width="40" height="50" rx="10" fill="#596153" />
+    <path d="M36 32h28M36 39h28M36 46h28M36 53h28M36 60h28M36 67h28" stroke="#c5cfbd" stroke-width="2" stroke-dasharray="2 3" />
+    <circle cx="50" cy="78" r="2" fill="#eeff00" />
+  </> : <>
+    <path d="M36 32v-9a14 14 0 0 1 28 0v9" stroke="#30352e" stroke-width="5" />
+    <path d="m23 30-5 50q32 9 64 0l-5-50Z" fill="#fff5df" stroke="#30352e" stroke-width="2" />
+    <path d="M35 31v38M65 31v38" stroke="#ba7945" stroke-width="5" />
+    <path d="M41 49h18v15H41z" fill="#eeff00" stroke="#30352e" stroke-width="2" />
+  </>}
+</svg>

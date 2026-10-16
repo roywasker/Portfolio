@@ -36,16 +36,16 @@ const [core, ...supportingGroups] = skillGroups;
 
 <style>
   .skills-section {
-    padding-block: clamp(3.5rem, 6vw, 6rem);
+    padding-block: var(--section-space);
     border-block: 1px solid var(--line);
-    background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+    background: var(--section-tint);
   }
   .skills-heading {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: end;
     gap: 1.5rem var(--content-column-gap);
-    margin-bottom: 2rem;
+    margin-bottom: var(--section-content-gap);
   }
   h2 {
     margin: 1.5rem 0 0;

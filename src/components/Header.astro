@@ -1,14 +1,16 @@
 ---
 import { navigation, profile } from "../data/portfolio";
+const homePrefix = Astro.url.pathname === "/" ? "" : "/";
+const isWorkPage = Astro.url.pathname.startsWith("/work/");
 ---
 
 <header class="site-header">
-  <a class="wordmark" href="#top" aria-label={`${profile.name} — back to top`}>
+  <a class="wordmark" href={`${homePrefix}#top`} aria-label={`${profile.name} — back to top`}>
     <span>{profile.name}</span>
   </a>
 
   <nav class="desktop-nav" aria-label="Primary navigation">
-    {navigation.map((item) => <a href={item.href} data-section-link>{item.label}</a>)}
+    {navigation.map((item) => <a href={`${homePrefix}${item.href}`} data-section-link aria-current={isWorkPage && item.href === "#work" ? "location" : undefined}>{item.label}</a>)}
   </nav>
 
   <div class="header-actions">
@@ -26,7 +28,7 @@ import { navigation, profile } from "../data/portfolio";
       <summary aria-label="Open navigation" aria-expanded="false"><span></span><span></span></summary>
       <nav aria-label="Mobile navigation">
         {navigation.map((item, index) => (
-          <a href={item.href} data-section-link><small>0{index + 1}</small>{item.label}</a>
+          <a href={`${homePrefix}${item.href}`} data-section-link aria-current={isWorkPage && item.href === "#work" ? "location" : undefined}><small>0{index + 1}</small>{item.label}</a>
         ))}
       </nav>
     </details>
@@ -49,10 +51,10 @@ import { navigation, profile } from "../data/portfolio";
     padding: .55rem .6rem .55rem .9rem;
     border: 1px solid var(--line);
     border-radius: 999px;
-    background: color-mix(in srgb, var(--bg) 76%, transparent);
+    /* Stable contrast when screenshots and demos scroll under navigation. */
+    background: var(--bg);
     box-shadow: var(--shadow-card);
-    backdrop-filter: blur(18px) saturate(140%);
-    transition: transform .35s ease, background-color .3s ease;
+    transition: transform .35s ease;
   }
 
   .wordmark {

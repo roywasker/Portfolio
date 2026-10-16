@@ -48,7 +48,7 @@ const linkedIn = profile.socials.find((social) => social.label === "LinkedIn");
 
 <style>
   .site-footer {
-    padding-top: clamp(4rem, 8vw, 8rem);
+    padding-top: var(--section-space);
     padding-bottom: 1.5rem;
   }
 
@@ -75,7 +75,8 @@ const linkedIn = profile.socials.find((social) => social.label === "LinkedIn");
   .email-address { display: inline-block; padding-block: .35rem; color: var(--ink); font-size: clamp(1.15rem, 2vw, 1.7rem); letter-spacing: -.03em; overflow-wrap: anywhere; text-underline-offset: .2em; }
   .email-address:hover { text-decoration: underline; }
   .email-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 1.1rem; }
-  .copy-email { padding: .75rem 1.25rem; cursor: pointer; }
+  .copy-email { min-width: 9rem; justify-content: center; padding: .75rem 1.25rem; cursor: pointer; }
+  .copy-email[data-copied] { border-color: var(--accent-text); color: var(--accent-text); background: var(--surface-raised); }
   .copy-email[hidden] { display: none; }
   .copy-email:disabled { cursor: wait; opacity: .65; }
   .copy-status { min-height: 1.5em; margin: .6rem 0 0; color: var(--muted); font-size: .8125rem; }
@@ -160,6 +161,7 @@ const linkedIn = profile.socials.find((social) => social.label === "LinkedIn");
       const email = copyButton.dataset.copyEmail;
       if (!email) return;
       clearTimeout(resetTimer);
+      delete copyButton.dataset.copied;
       copyStatus.textContent = "";
       copyButton.disabled = true;
       let copied = false;
@@ -177,12 +179,14 @@ const linkedIn = profile.socials.find((social) => social.label === "LinkedIn");
         copyButton.focus({ preventScroll: true });
       }
       copyButton.textContent = copied ? "Copied ✓" : "Copy email";
+      if (copied) copyButton.dataset.copied = "";
       copyStatus.textContent = copied
         ? "Email address copied to clipboard."
         : "Couldn’t copy automatically. Select the email address above to copy it manually.";
       if (copied) {
         resetTimer = setTimeout(() => {
           copyButton.textContent = "Copy email";
+          delete copyButton.dataset.copied;
           copyStatus.textContent = "";
         }, 4000);
       }

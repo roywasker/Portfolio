@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TrendyDemo from '../../components/TrendyDemo.astro';
+const repository = 'https://github.com/roywasker/Trendy';
+const decisions = [
+  { number: '01', title: 'Share the experience. Keep the platform boundary.', tag: 'COMPOSE MULTIPLATFORM', description: 'Trendy puts its shopping screens and business logic in commonMain. The Android host and the iOS ComposeUIViewController connect to the same App entry point, while platform-specific integrations live outside the shared UI.', benefit: 'One shared implementation can carry a product interaction across Android and iOS, reducing the number of separate UI paths to maintain.', tradeoff: 'Sharing the UI does not remove platform work. Lifecycle behavior, native integrations and the feel of each platform still need separate verification.', file: 'composeApp/src/iosMain/kotlin/org/roy/ecommerce_project/MainViewController.kt', source: 'See the iOS entry point' },
+  { number: '02', title: 'Give features a boundary, not a database dependency.', tag: 'FEATURE MODULES · KOIN', description: 'Catalog, product details, cart and checkout have their own feature modules. ViewModels receive repository interfaces through constructor injection; the shared Koin module binds those interfaces to concrete implementations.', benefit: 'A screen can express what data it needs without owning the Firestore implementation. That boundary provides a place to substitute a data source or a test double.', tradeoff: 'More modules bring more Gradle wiring and dependency decisions. The useful boundary is the responsibility of each feature—not simply the number of modules.', file: 'di/src/commonMain/kotlin/com/Trendy/di/KoinModule.kt', source: 'See the dependency bindings' },
+  { number: '03', title: 'Derive the cart from the data that changes.', tag: 'KOTLIN FLOW · EXPLICIT STATE', description: 'CartViewModel reads the customer stream, extracts unique product IDs with flatMapLatest, and combines the customer and product streams into cart rows. RequestState represents loading, success and error explicitly.', benefit: 'The cart presentation follows the latest customer and product data. An empty cart produces an empty product list without starting a product lookup.', tradeoff: 'Combining streams means handling partial and failed results. The current mapping omits cart entries whose product is missing; a future iteration could explain unavailable items directly to the shopper.', file: 'feature/home/cart/src/commonMain/kotlin/com/Trendy/cart/CartViewModel.kt', source: 'See the cart state pipeline' },
+];
+---
+<BaseLayout title="Trendy — Mobile engineering case study | Roy Wasker" description="Inside Trendy: a Kotlin Multiplatform shopping app, an interactive cart demo, and three engineering decisions grounded in its source code.">
+  <article class="case-study" id="top">
+    <header class="case-hero section-shell">
+      <a class="back-link" href="/#work">← Back to selected work</a>
+      <p class="eyebrow">CASE STUDY / 01 <span>ANDROID + iOS</span></p>
+      <h1>Trendy.<br /><em>One experience.<br />Two platforms.</em></h1>
+      <p class="case-lead">From a product that catches your eye to a cart that keeps up. A closer look at building a shared mobile shopping experience with Kotlin and Compose.</p>
+      <div class="case-actions"><a class="button button-primary" href="#demo">Try the shopping demo <span aria-hidden="true">↓</span></a><a class="source-link" href={repository} target="_blank" rel="noreferrer">Explore source code ↗</a></div>
+      <dl class="project-facts"><div><dt>Product</dt><dd>Mobile commerce</dd></div><div><dt>Platforms</dt><dd>Android & iOS targets</dd></div><div><dt>Interface</dt><dd>Compose Multiplatform</dd></div><div><dt>Data & state</dt><dd>Firebase · Kotlin Flow</dd></div></dl>
+    </header>
+    <section class="case-section section-shell story-grid" aria-labelledby="challenge-title">
+      <div><p class="eyebrow">THE CHALLENGE</p><h2 id="challenge-title">Make shopping feel like one continuous journey.</h2></div>
+      <div class="story-copy"><p>A shopper moves between discovery, product details and their cart. Those screens need to agree on the product, the quantity and what happens next—even when the data changes.</p><p>Trendy approaches that problem with shared Compose screens, feature-level ViewModels and repository-backed data flows. The repository includes product browsing, categories, account management, a cart, checkout and product administration.</p><p>This case study follows the catalog-to-cart slice. The decisions below describe the implementation in the repository and its engineering tradeoffs; they are not claims about production adoption or measured business results.</p></div>
+    </section>
+    <section class="demo-section" id="demo" aria-labelledby="demo-title">
+      <div class="section-shell demo-layout"><div class="demo-intro"><p class="eyebrow">TOUCH THE EXPERIENCE</p><h2 id="demo-title">A small shop.<br /><em>A real interaction.</em></h2><p>Pick a product, choose a quantity and build a cart. Change your mind, remove an item, or start again.</p><ol><li><strong>Discover</strong><span>Browse the sample catalog or filter by category.</span></li><li><strong>Choose</strong><span>Open a product and select between 1 and 10 items.</span></li><li><strong>Refine</strong><span>Edit your cart and see the subtotal update.</span></li></ol><p class="demo-context">This is a browser recreation of the shopping flow, inspired by the app’s interface. Products and prices are illustrative. The original app screenshots are below.</p></div><TrendyDemo /></div>
+    </section>
+    <section class="case-section section-shell" id="decisions" aria-labelledby="decisions-title"><p class="eyebrow">BEHIND THE INTERFACE</p><h2 id="decisions-title">Three decisions.<br /><em>The reasoning behind the build.</em></h2>
+      <div class="decisions">{decisions.map(decision => <article class="decision"><span class="decision-number" aria-hidden="true">{decision.number}</span><div><p class="decision-tag">{decision.tag}</p><h3>{decision.title}</h3><p>{decision.description}</p><div class="decision-detail"><div><h4>What this enables</h4><p>{decision.benefit}</p></div><div><h4>The tradeoff</h4><p>{decision.tradeoff}</p></div></div><a class="source-link" href={`${repository}/blob/HEAD/${decision.file}`} target="_blank" rel="noreferrer">{decision.source} ↗</a></div></article>)}</div>
+    </section>
+    <section class="case-section section-shell" id="screenshots" aria-labelledby="screenshots-title"><p class="eyebrow">FROM THE APP</p><h2 id="screenshots-title">The original experience.</h2><p class="section-description">Android screenshots included in the Trendy repository. These are captures of the app, separate from the interactive recreation above.</p><div class="screenshots">{[['homepage', 'Product discovery'], ['categories', 'Browsing categories'], ['cart', 'Managing the cart']].map(([file, caption]) => <figure><img src={`/images/trendy/${file}.jpg`} alt={`Trendy Android app: ${caption.toLowerCase()}`} width="432" height="960" loading="lazy" decoding="async" /><figcaption>{caption}</figcaption></figure>)}</div></section>
+    <section class="case-section section-shell story-grid" aria-labelledby="next-title"><div><p class="eyebrow">WHAT I WOULD EXPLORE NEXT</p><h2 id="next-title">Make the edges<br /><em>as clear as the happy path.</em></h2></div><div class="story-copy"><p>The next useful iteration would focus on unavailable products, recovery from data errors, and predictable cart behavior when connectivity changes.</p><p>Those are proposed next steps, not completed features. The current implementation provides concrete boundaries—repository interfaces, ViewModels and request states—where that work can be developed and tested.</p><a class="source-link" href={repository} target="_blank" rel="noreferrer">Read the Trendy repository ↗</a></div></section>
+    <footer class="case-footer section-shell"><div><p class="eyebrow">LET’S BUILD SOMETHING USEFUL</p><h2>Have a mobile challenge?</h2></div><a class="button button-primary" href="/#contact">Let’s talk <span aria-hidden="true">↗</span></a><a class="back-link" href="/#work">← All projects</a></footer>
+  </article>
+</BaseLayout>
+<style>
+  .case-study { overflow: clip; }
+  .case-hero { padding-top: 8.5rem; padding-bottom: 3rem; }
+  .back-link { display: inline-block; padding-block: .75rem; color: var(--muted); text-decoration: underline; text-underline-offset: .3em; }
+  .case-hero .eyebrow { margin-top: 3rem; }
+  h1 { font-size: clamp(3.25rem, 8vw, 7.5rem); line-height: .98; letter-spacing: -.07em; margin: 1.7rem 0 2rem; max-width: 14ch; }
+  em { color: var(--accent-text); font-style: normal; }
+  .case-lead { max-width: 42rem; color: var(--muted); font-size: clamp(1.1rem, 2vw, 1.4rem); line-height: 1.65; }
+  .case-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; margin-top: 2rem; }
+  .source-link { color: var(--ink); text-decoration: underline; text-underline-offset: .3em; display: inline-block; padding-block: .6rem; font-size: .9rem; }
+  .source-link:hover, .back-link:hover { color: var(--accent-text); }
+  .project-facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; border-block: 1px solid var(--line); padding-block: 1.75rem; margin-top: 4rem; }
+  dt { color: var(--muted); font-size: .75rem; } dd { margin: .5rem 0 0; font-size: .9rem; }
+  .case-section { padding-block: clamp(3rem, 6vw, 6rem); }
+  h2 { font-size: clamp(2rem, 4vw, 3.8rem); letter-spacing: -.05em; line-height: 1.1; margin: 1.25rem 0 2rem; }
+  .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 6rem); }
+  .story-copy { color: var(--muted); line-height: 1.85; }
+  .story-copy p:first-child { margin-top: 0; }
+  .demo-section { background: var(--surface); border-block: 1px solid var(--line); padding-block: clamp(3rem, 6vw, 6rem); }
+  .demo-layout { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 3rem; }
+  .demo-intro > p { max-width: 32rem; color: var(--muted); }
+  ol { padding-left: 1.5rem; margin: 2rem 0; }
+  li { padding-left: .65rem; margin-bottom: 1.3rem; } li::marker { color: var(--accent-text); }
+  li strong, li span { display: block; } li span { color: var(--muted); font-size: .9rem; margin-top: .3rem; }
+  .demo-context { border-top: 1px solid var(--line); padding-top: 1.25rem; font-size: .85rem; line-height: 1.75; }
+  .decision { display: grid; grid-template-columns: 5rem 1fr; gap: 2rem; border-top: 1px solid var(--line); padding-block: 2.5rem; }
+  .decision-number { color: var(--accent-text); font-size: 3.5rem; letter-spacing: -.06em; }
+  .decision-tag { font: .75rem/1.5 ui-monospace, monospace; color: var(--muted); letter-spacing: .05em; }
+  .decision h3 { font-size: clamp(1.5rem, 2.7vw, 2.3rem); line-height: 1.2; margin: .7rem 0 1rem; letter-spacing: -.03em; }
+  .decision p:not(.decision-tag) { color: var(--muted); line-height: 1.8; }
+  .decision-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .decision h4 { font-size: .9rem; margin-bottom: .5rem; }
+  .decision-detail p { font-size: .9rem; margin-top: 0; }
+  .section-description { max-width: 40rem; color: var(--muted); }
+  .screenshots { display: grid; grid-template-columns: repeat(3, minmax(0, 15rem)); align-items: start; gap: clamp(1rem, 3vw, 2rem); margin-top: 2rem; }
+  figure { min-width: 0; margin: 0; text-align: center; } figure img { width: auto; max-width: 100%; height: auto; max-height: min(33rem, 72svh); margin-inline: auto; display: block; border-radius: .75rem; border: 1px solid var(--line); }
+  figcaption { color: var(--muted); font-size: .85rem; padding-top: 1rem; }
+  .case-footer { border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 2rem; padding-block: 3rem; }
+  .case-footer > div { flex: 1 1 24rem; } .case-footer h2 { margin-bottom: 0; font-size: 2rem; }
+  @media(max-width: 48rem) { .case-hero { padding-top: 6.5rem; } .case-hero .eyebrow { margin-top: 1.5rem; flex-wrap: wrap; } .project-facts { grid-template-columns: 1fr 1fr; } .story-grid, .demo-layout, .decision-detail { grid-template-columns: 1fr; gap: 1.5rem; } .decision { grid-template-columns: 1fr; gap: .25rem; } .decision-number { font-size: 2rem; } .screenshots { grid-template-columns: repeat(2, minmax(0, 12rem)); gap: 1.5rem 1rem; } }
+</style>

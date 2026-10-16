@@ -1,0 +1,249 @@
+---
+import { demoProducts, money } from '../data/trendy-demo';
+import TrendyProductArt from './TrendyProductArt.astro';
+import TrendyIcon from './TrendyIcon.astro';
+---
+<div class="demo-wrap">
+  <div class="demo-device" data-trendy-demo hidden>
+    <div class="device-status" aria-hidden="true"><span>9:41</span><span class="camera"></span><span>▰</span></div>
+    <div class="demo-brand"><button data-action="categories" aria-label="Browse categories"><TrendyIcon name="menu" /></button><strong data-device-title>TRENDY</strong><button data-action="reset" aria-label="Reset demo" title="Reset demo">↺</button></div>
+    <div class="demo-content">
+      <section data-panel="catalog" aria-labelledby="catalog-title">
+        <h3 id="catalog-title" tabindex="-1" class="screen-reader-heading">Products</h3>
+        <label class="filter-label" hidden>Browse category
+          <select data-category><option>All products</option><option>Gadgets</option><option>Fashion &amp; Style</option><option>Home Decor</option><option>Health</option><option>DIY</option></select>
+        </label>
+        <div class="demo-products">
+          {demoProducts.map(product => <button class="demo-product" data-product={product.id} data-category-name={product.category}>
+            <span class={`product-art art-${product.id}`} aria-hidden="true"><TrendyProductArt kind={product.id} /></span>
+            <span><strong>{product.name}</strong><small>{product.category}</small></span><b>{money(product.price)}</b>
+          </button>)}
+        </div>
+        <p data-no-products hidden>No sample products in this category. Choose another category to continue.</p>
+        <h4 class="discount-title">Discounted Products</h4>
+        <button class="discount-product" data-featured-product="earbuds" aria-label="View discounted earbuds"><span class="discount-art" aria-hidden="true"><TrendyProductArt kind="earbuds" /></span><span><strong>EVERYDAY EARBUDS</strong><small>Everyday sound</small><span class="discount-meta">♧ 20g <b>{money(demoProducts[0].price)}</b></span></span></button>
+      </section>
+      <section data-panel="categories" hidden aria-labelledby="categories-title">
+        <h3 id="categories-title" tabindex="-1" class="screen-reader-heading">Categories</h3>
+        <div class="category-list">{['Gadgets', 'Fashion & Style', 'Home Decor', 'Health', 'DIY'].map((name, index) => <button data-filter={name}><i style={`--category-color: ${['#ffc738', '#38b3ff', '#19d109', '#8e5eff', '#ff5e60'][index]}`} aria-hidden="true"></i>{name}</button>)}</div>
+      </section>
+      <section data-panel="details" hidden aria-labelledby="detail-title">
+        <button class="text-button" data-action="catalog">← Back to products</button>
+        <div class="quantity"><span>Quantity</span><button data-action="less" aria-label="Decrease product quantity">−</button><output data-quantity aria-label="Product quantity">1</output><button data-action="more" aria-label="Increase product quantity">+</button></div>
+        <div class="detail-art product-art" aria-hidden="true" data-detail-art></div>
+        <p class="demo-eyebrow" data-detail-category></p>
+        <h3 id="detail-title" tabindex="-1"></h3><p data-detail-description></p><strong class="detail-price" data-detail-price></strong>
+        <button class="demo-primary" data-action="add">Add to cart</button>
+      </section>
+      <section data-panel="cart" hidden aria-labelledby="cart-title">
+        <h3 id="cart-title" tabindex="-1" class="screen-reader-heading">Your cart</h3>
+        <p data-empty>Your cart is empty. Find something you like to get started.</p>
+        <div data-cart-items></div>
+        <div class="demo-total"><span>Subtotal</span><strong data-total>$0.00</strong></div>
+        <p class="demo-note">Sample prices in USD. No shipping or tax calculation.</p>
+        <button class="demo-primary" data-action="review">Review demo order</button>
+        <button class="text-button" data-action="catalog">Continue browsing →</button>
+      </section>
+      <section data-panel="review" hidden aria-labelledby="review-title">
+        <p class="demo-eyebrow">A LITTLE PREVIEW OF THE JOURNEY</p>
+        <h3 id="review-title" tabindex="-1">Ready for the next step.</h3>
+        <p>Your selection totals <strong data-review-total></strong>.</p>
+        <p>The app continues to checkout. This demo ends here: no order is placed, no payment is taken and no personal details are collected.</p>
+        <button class="demo-primary" data-action="cart">Back to cart</button>
+        <button class="text-button" data-action="reset">Start over</button>
+      </section>
+    </div>
+    <p class="demo-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <nav class="demo-nav" aria-label="Trendy demo navigation"><button data-action="catalog" aria-label="Browse products" aria-current="page"><TrendyIcon name="home" /></button><button data-action="cart" aria-label="View cart"><TrendyIcon name="cart" /><span data-count class="cart-badge">0</span></button><button data-action="categories" aria-label="Categories"><TrendyIcon name="categories" /></button></nav>
+  </div>
+  <noscript><p>The interactive demo needs JavaScript. <a href="#screenshots">See the original app screenshots instead.</a></p></noscript>
+  <p class="demo-disclosure">Browser recreation · Sample products · No sign-in or payment</p>
+</div>
+<template id="trendy-cart-row">
+  <article class="cart-row"><div class="cart-art" aria-hidden="true"></div><div class="cart-info"><h4></h4><p></p><div class="cart-controls"><button data-cart-action="less">−</button><output></output><button data-cart-action="more">+</button><button data-cart-action="remove">Remove</button></div></div></article>
+</template>
+<script>
+  import { demoProducts, money, setQuantity, cartTotal, type DemoCart } from '../data/trendy-demo';
+  const demo = document.querySelector<HTMLElement>('[data-trendy-demo]');
+  if (demo) {
+    const find = <T extends HTMLElement = HTMLElement>(selector: string) => demo.querySelector<T>(selector)!;
+    let cart: DemoCart = {};
+    let selected: typeof demoProducts[number] = demoProducts[0];
+    let quantity = 1;
+    let totalFeedbackTimer: ReturnType<typeof setTimeout> | undefined;
+    const announce = (message: string) => { find('.demo-status').textContent = message; };
+    const show = (panel: string) => {
+      find('[data-device-title]').textContent = ({ catalog: 'TRENDY', categories: 'CATEGORIES', details: 'DETAILS', cart: 'CART', review: 'CHECKOUT' } as Record<string, string>)[panel];
+      find('.demo-content').scrollTop = 0;
+      demo.querySelectorAll<HTMLElement>('[data-panel]').forEach(element => { element.hidden = element.dataset.panel !== panel; });
+      demo.querySelectorAll('.demo-nav button').forEach(button => {
+        if ((button as HTMLElement).dataset.action === (panel === 'details' ? 'catalog' : panel === 'review' ? 'cart' : panel)) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+      });
+      find(`[data-panel="${panel}"] h3`).focus({ preventScroll: true });
+    };
+    const updateQuantity = () => {
+      find('output[data-quantity]').textContent = String(quantity);
+      find<HTMLButtonElement>('[data-action="less"]').disabled = quantity === 1;
+      find<HTMLButtonElement>('[data-action="more"]').disabled = quantity === 10;
+    };
+    const renderCart = () => {
+      const items = find('[data-cart-items]'); items.replaceChildren();
+      for (const product of demoProducts) {
+        const count = cart[product.id]; if (!count) continue;
+        const row = (document.querySelector<HTMLTemplateElement>('#trendy-cart-row')!.content.firstElementChild!.cloneNode(true)) as HTMLElement;
+        row.dataset.id = product.id;
+        row.querySelector('h4')!.textContent = product.name;
+        row.querySelector('.cart-art')!.append(find(`[data-product="${product.id}"] svg`).cloneNode(true));
+        row.querySelector('p')!.textContent = `${money(product.price)} each · ${money(product.price * count)}`;
+        row.querySelector('output')!.textContent = String(count);
+        row.querySelector('output')!.setAttribute('aria-label', `${product.name} quantity`);
+        row.querySelectorAll<HTMLButtonElement>('button').forEach(button => {
+          const action = button.dataset.cartAction;
+          button.setAttribute('aria-label', `${action === 'less' ? 'Decrease' : action === 'more' ? 'Increase' : 'Remove'} ${product.name}${action === 'remove' ? '' : ' quantity'}`);
+          button.disabled = (action === 'less' && count === 1) || (action === 'more' && count === 10);
+        });
+        items.append(row);
+      }
+      const count = Object.values(cart).reduce((a, b) => a + b, 0);
+      find('[data-count]').textContent = String(count);
+      const total = find('[data-total]');
+      const nextTotal = money(cartTotal(cart));
+      if (total.textContent !== nextTotal) {
+        total.textContent = nextTotal;
+        total.dataset.updated = '';
+        clearTimeout(totalFeedbackTimer);
+        totalFeedbackTimer = setTimeout(() => { delete total.dataset.updated; }, 1100);
+      }
+      find('[data-empty]').hidden = count > 0;
+      find<HTMLButtonElement>('[data-action="review"]').disabled = count === 0;
+    };
+    find<HTMLSelectElement>('[data-category]').addEventListener('change', event => {
+      const value = (event.target as HTMLSelectElement).value;
+      demo.querySelectorAll<HTMLElement>('[data-product]').forEach(button => { button.hidden = value !== 'All products' && value !== button.dataset.categoryName; });
+      find('.filter-label').hidden = value === 'All products';
+      find('[data-no-products]').hidden = value === 'All products' || demoProducts.some(product => product.category === value);
+      find('.discount-title').hidden = value !== 'All products';
+      find('.discount-product').hidden = value !== 'All products';
+      announce(`${value} selected.`);
+    });
+    demo.addEventListener('click', event => {
+      const button = (event.target as Element).closest<HTMLButtonElement>('button'); if (!button || button.disabled) return;
+      if (button.dataset.filter) {
+        const category = button.dataset.filter;
+        const select = find<HTMLSelectElement>('[data-category]');
+        select.value = category;
+        select.dispatchEvent(new Event('change'));
+        show('catalog');
+        return;
+      }
+      if (button.dataset.product || button.dataset.featuredProduct) {
+        selected = demoProducts.find(product => product.id === (button.dataset.product ?? button.dataset.featuredProduct))!;
+        quantity = 1;
+        find('#detail-title').textContent = selected.name;
+        const artwork = find(`[data-product="${selected.id}"] svg`).cloneNode(true);
+        find('[data-detail-art]').replaceChildren(artwork);
+        find('[data-detail-category]').textContent = selected.category;
+        find('[data-detail-description]').textContent = selected.description;
+        find('[data-detail-price]').textContent = money(selected.price);
+        updateQuantity(); announce(''); show('details'); return;
+      }
+      if (button.dataset.cartAction) {
+        const id = button.closest<HTMLElement>('[data-id]')!.dataset.id!;
+        const action = button.dataset.cartAction;
+        cart = setQuantity(cart, id, action === 'remove' ? 0 : cart[id] + (action === 'more' ? 1 : -1));
+        renderCart();
+        const replacement = demo.querySelector<HTMLButtonElement>(`[data-id="${id}"] [data-cart-action="${action}"]`);
+        if (replacement && !replacement.disabled) replacement.focus({ preventScroll: true });
+        else find('#cart-title').focus({ preventScroll: true });
+        announce(`Cart updated. Subtotal ${money(cartTotal(cart))}.`); return;
+      }
+      switch (button.dataset.action) {
+        case 'less': quantity = Math.max(1, quantity - 1); updateQuantity(); break;
+        case 'more': quantity = Math.min(10, quantity + 1); updateQuantity(); break;
+        case 'add': cart = setQuantity(cart, selected.id, (cart[selected.id] ?? 0) + quantity); renderCart(); show('cart'); announce(`${selected.name} added. Maximum 10 per product.`); break;
+        case 'catalog': show('catalog'); break;
+        case 'categories': show('categories'); break;
+        case 'cart': show('cart'); break;
+        case 'review': find('[data-review-total]').textContent = money(cartTotal(cart)); show('review'); break;
+        case 'reset': cart = {}; renderCart(); find<HTMLSelectElement>('[data-category]').value = 'All products'; demo.querySelectorAll<HTMLElement>('[data-product]').forEach(element => { element.hidden = false; }); find<HTMLSelectElement>('[data-category]').dispatchEvent(new Event('change')); show('catalog'); announce('Demo reset. Your cart is empty.'); break;
+      }
+    });
+    renderCart(); demo.hidden = false;
+  }
+</script>
+<style>
+  @font-face { font-family: TrendyDisplay; src: url('/fonts/trendy/bebas_neue_regular.ttf') format('truetype'); font-display: swap; }
+  @font-face { font-family: TrendyText; src: url('/fonts/trendy/roboto_condensed_medium.ttf') format('truetype'); font-display: swap; }
+  .demo-wrap { width: min(100%, 24rem); margin-inline: auto; }
+  .demo-device { color-scheme: light; color: #111; background: #fff; border: 7px solid #282828; border-radius: 2.2rem; overflow: hidden; box-shadow: 0 24px 65px #0002; height: clamp(36rem, 180vw, 48rem); display: grid; grid-template-rows: 28px 58px minmax(0, 1fr) 28px 76px; font-family: TrendyText, Arial, sans-serif; }
+  .demo-device [hidden], .demo-device[hidden] { display: none !important; }
+  .device-status { display: flex; justify-content: space-between; align-items: center; padding: 0 1.3rem; font: .75rem Arial, sans-serif; }
+  .camera { width: .4rem; height: .4rem; border-radius: 50%; background: #111; }
+  .demo-brand { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: .5rem; padding-inline: .5rem; }
+  .demo-brand strong { font: 2rem/1 TrendyDisplay, sans-serif; text-align: center; }
+  .demo-brand button { border: 0; background: transparent; font-size: 1.5rem; padding: .5rem; }
+  .demo-content { min-width: 0; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: thin; padding: .75rem; }
+  .demo-content section { min-width: 0; }
+  .demo-content h3 { font: 1.8rem/1.15 TrendyDisplay, sans-serif; margin: .5rem 0 1rem; }
+  .demo-content p { font-size: .9rem; line-height: 1.5; }
+  .screen-reader-heading { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .demo-eyebrow { color: #595959; font-size: .75rem !important; }
+  .filter-label { display: grid; gap: .3rem; font-size: .75rem; margin-bottom: .7rem; }
+  select { width: 100%; border: 1px solid #ddd; background: #fafafa; color: #111; border-radius: .5rem; padding: .6rem; font: inherit; min-height: 44px; }
+  button { cursor: pointer; color: #111; font: inherit; min-height: 44px; border: 1px solid #ebebeb; background: #fafafa; border-radius: .65rem; padding: .6rem; }
+  button:focus-visible, select:focus-visible { outline: 3px solid #9c3000; outline-offset: -3px; }
+  button:disabled { cursor: default; color: #666; background: #ebebeb; }
+  .demo-products { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; padding: 1.5rem .25rem .65rem; scrollbar-width: thin; }
+  .demo-product { flex: 0 0 78%; min-width: 0; height: 19rem; position: relative; display: flex; flex-direction: column; justify-content: end; text-align: left; overflow: hidden; scroll-snap-align: center; padding: 1rem; border: 0; color: #fff; background: linear-gradient(180deg, #fafafa 0%, #e3e3e3 38%, #555 68%, #000 100%); border-radius: .8rem; }
+  .demo-product strong, .demo-product small { display: block; }
+  .demo-product > span:not(.product-art), .demo-product > b { position: relative; z-index: 1; }
+  .demo-product strong { font: 1.8rem/1 TrendyDisplay, sans-serif; text-transform: uppercase; }
+  .demo-product small { font-size: .85rem; color: #eee; margin-top: .5rem; }
+  .demo-product > b { color: #eeff00; align-self: end; margin-top: .75rem; font-size: 1.1rem; }
+  .product-art { display: grid; place-items: center; }
+  .demo-product .product-art { position: absolute; inset: 1.3rem 1rem auto; height: 10rem; }
+  .product-art :global(svg), .discount-art :global(svg) { width: 100%; height: 100%; }
+  .discount-title { text-align: center; font-size: 1rem; font-weight: 400; color: #646464; margin: 1.2rem 0; }
+  .discount-product { display: grid; grid-template-columns: 5.5rem 1fr; gap: .7rem; align-items: center; width: 100%; padding: 0; text-align: left; overflow: hidden; }
+  .discount-art { background: #fff; border-right: 1px solid #ebebeb; height: 6.5rem; }
+  .discount-product > span:last-child { padding: .7rem .7rem .7rem 0; min-width: 0; }
+  .discount-product strong { font: 1.2rem TrendyDisplay, sans-serif; }
+  .discount-product small { display: block; margin-top: .4rem; color: #666; }
+  .discount-meta { display: flex; justify-content: space-between; margin-top: .8rem; font-size: .75rem; }
+  .discount-meta b { color: #ae3600; font-size: 1rem; }
+  .detail-art { height: 14rem; background: #fafafa; margin: 1rem 0; border-radius: .8rem; }
+  .detail-art :global(svg) { max-width: 13rem; }
+  .detail-price { display: block; color: #ae3600; font-size: 1.4rem; margin: .5rem 0 1rem; }
+  .quantity { display: flex; align-items: center; justify-content: end; gap: .5rem; }
+  .quantity > span { margin-right: auto; font-size: .8rem; }
+  .quantity button { width: 44px; background: #eeff00; border: 0; }
+  .quantity button:disabled { background: #ebebeb; }
+  .quantity output { min-width: 1.5rem; text-align: center; }
+  .demo-primary { width: 100%; background: #eeff00; border: 0; font-weight: 700; margin-block: .75rem; }
+  .text-button { background: transparent; border-color: transparent; text-decoration: underline; text-underline-offset: .2em; }
+  .demo-status { min-width: 0; margin: 0; padding: .25rem 1rem; font-size: .7rem; color: #555; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+  .demo-nav { display: flex; align-items: center; justify-content: space-around; background: #fafafa; border-radius: 1rem; margin: 0 .7rem .7rem; }
+  .demo-nav button { position: relative; display: grid; place-items: center; border: 0; background: transparent; width: 30%; min-height: 48px; }
+  .demo-nav [aria-current] { color: #ae3600; }
+  .cart-badge { position: absolute; right: .5rem; top: 0; border-radius: 1rem; background: #eeff00; color: #111; min-width: 1rem; font-size: .65rem; }
+  .demo-disclosure { text-align: center; color: var(--muted); font-size: .75rem; margin: 1rem 0 0; }
+  .demo-total { display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ebebeb; }
+  [data-total] { padding: .2rem .4rem; border-radius: .35rem; font-variant-numeric: tabular-nums; }
+  [data-total][data-updated] { color: #173e30; background: #dceee7; box-shadow: 0 0 0 2px #8cac9c; }
+  .demo-note { color: #666; font-size: .75rem !important; }
+  .category-list { display: grid; gap: .75rem; padding-top: .5rem; }
+  .category-list button { display: flex; align-items: center; gap: 1rem; min-height: 66px; font: 1.5rem TrendyDisplay, sans-serif; text-align: left; padding: 1rem; }
+  .category-list i { width: .7rem; height: .7rem; border-radius: 50%; background: var(--category-color); flex-shrink: 0; }
+  :global(.cart-row) { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: .5rem; background: #fafafa; border: 1px solid #ebebeb; border-radius: .8rem; margin-bottom: .7rem; overflow: hidden; }
+  :global(.cart-art) { display: grid; place-items: center; background: white; border-right: 1px solid #ebebeb; }
+  :global(.cart-art svg) { width: 100%; height: auto; }
+  :global(.cart-info) { min-width: 0; padding: .7rem .4rem .7rem 0; }
+  :global(.cart-row h4) { margin: 0; font: 1.2rem TrendyDisplay, sans-serif; text-transform: uppercase; }
+  :global(.cart-row p) { font-size: .85rem; color: #ae3600; }
+  :global(.cart-controls) { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; }
+  :global(.cart-controls button) { min-width: 36px; min-height: 44px; border: 0; border-radius: .45rem; background: #eeff00; color: #111; cursor: pointer; font: inherit; }
+  :global(.cart-controls button:focus-visible) { outline: 3px solid #9c3000; }
+  :global(.cart-controls button:disabled) { color: #666; background: #ebebeb; cursor: default; }
+  :global(.cart-controls button:last-child) { background: transparent; text-decoration: underline; font-size: .75rem; padding: .2rem; }
+</style>

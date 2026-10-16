@@ -1,5 +1,14 @@
 @layer reset, base, components, motion, responsive;
 
+/* Fragment navigation needs real heights before the browser computes its
+   destination, including cards above the target. This covers initial URLs and
+   subsequent hash changes without JS scroll corrections. Keep this unlayered
+   so it also overrides Astro's unlayered project-card styles. Ordinary visits
+   without a fragment retain deferred rendering. */
+html:has(:target) :is(.about-story, .project-card, .skills-section, .site-footer) {
+  content-visibility: visible;
+}
+
 @layer reset {
   *, *::before, *::after { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -16,6 +25,9 @@
     --muted: #a3a49d;
     --surface: #1a1c18;
     --surface-raised: #242720;
+    --section-tint: #171b17;
+    --section-space: clamp(3.5rem, 7vw, 7rem);
+    --section-content-gap: clamp(2rem, 4vw, 3.5rem);
     --line: rgba(242, 240, 233, .16);
     --accent: #c8ff36;
     --accent-strong: #a9e600;
@@ -48,6 +60,7 @@
     --muted: #5e6b65;
     --surface: #ffffff;
     --surface-raised: #edf2ee;
+    --section-tint: #edf2ee;
     --line: rgba(32, 51, 46, .16);
     --accent: #246b58;
     --accent-strong: #1b5546;
@@ -171,8 +184,8 @@
   .button-ghost { color: var(--ink); background: var(--surface); }
   .button-ghost span { border: 1px solid var(--line); }
 
-  .about-story { padding-block: clamp(4rem, 7vw, 7rem); border-top: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 55%, var(--bg)); }
-  .about-shell { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2.5rem var(--content-column-gap); }
+  .about-story { padding-block: var(--section-space); border-block: 1px solid var(--line); background: var(--section-tint); }
+  .about-shell { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--section-content-gap) var(--content-column-gap); }
   .about-intro h2 { margin: 1.5rem 0 0; font-size: var(--section-title-size); font-weight: 700; line-height: 1.06; letter-spacing: -.055em; text-wrap: balance; }
   .about-intro h2 em { color: var(--accent-text); font-style: normal; }
   .about-copy { max-width: 38rem; }
@@ -185,163 +198,38 @@
   .about-experience dt { color: var(--muted); font-size: .75rem; }
   .about-experience dd { margin: .3rem 0 0; color: var(--ink); font-size: .875rem; }
 
-  .work-section { padding-block: clamp(7rem, 14vw, 13rem); }
-  .section-heading { margin-bottom: clamp(4rem, 8vw, 8rem); }
+  .work-section { padding-block: var(--section-space); }
+  .section-heading { margin-bottom: var(--section-content-gap); }
   .section-heading > .eyebrow { margin-bottom: 1.5rem; }
   .section-heading > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--content-column-gap); align-items: end; }
   .section-heading h2 { max-width: 64rem; margin: 0; font-size: var(--section-title-size); line-height: 1.06; letter-spacing: -.05em; }
   .section-heading h2 em { color: transparent; font-style: normal; -webkit-text-stroke: 1px var(--ink); }
   .section-heading > div > p { max-width: 28rem; margin: 0; color: var(--muted); font-size: .88rem; line-height: 1.65; }
   .project-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .more-projects-label { grid-column: 1 / -1; margin: var(--section-content-gap) 0 .5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; letter-spacing: .03em; }
 
-  .all-work-link {
-    content-visibility: auto;
-    contain-intrinsic-block-size: auto 36rem;
-    --github-color: var(--accent-text);
-    min-width: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    padding: .7rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    color: var(--ink);
-    background: var(--surface);
-    box-shadow: var(--shadow-card);
-    transition: var(--interaction-transition);
+  /* Chapter markers tie the full-width background bands to the content grid. */
+  :is(.about-story, .work-section, .skills-section, .site-footer) .eyebrow {
+    flex-wrap: wrap;
+    gap: .75rem;
+    font-size: .75rem;
+    letter-spacing: .08em;
   }
-  .all-work-link:hover,
-  .all-work-link:focus-visible {
-    border-color: var(--accent-text);
-    box-shadow: var(--shadow-card-hover);
-    transform: translateY(-2px);
-  }
-
-  .all-work-link:active { transform: translateY(0); box-shadow: var(--shadow-card); }
-
-  .github-card-visual {
-    position: relative;
-    display: grid;
+  :is(.about-story, .work-section, .skills-section, .site-footer) .eyebrow > span {
+    display: inline-grid;
     place-items: center;
-    min-height: clamp(13rem, 23vw, 21rem);
-    overflow: hidden;
-    border: 1px solid var(--line);
-    border-radius: calc(var(--radius-lg) - .55rem);
-    color: var(--github-color);
-    background:
-      radial-gradient(circle at center, color-mix(in srgb, var(--github-color) 11%, transparent), transparent 62%),
-      color-mix(in srgb, var(--surface-raised) 76%, var(--bg));
-    transition: border-color .35s ease;
-  }
-  .github-card-visual::before,
-  .github-card-visual::after {
-    content: "";
-    position: absolute;
-    width: 13rem;
-    aspect-ratio: 1;
-    border: 1px solid currentColor;
-    border-radius: 50%;
-    opacity: .16;
-    transition: transform .7s cubic-bezier(.2, .8, .2, 1), opacity .35s ease;
-  }
-  .github-card-visual::before { transform: scaleX(.42) rotate(34deg); }
-  .github-card-visual::after { transform: scaleX(.42) rotate(-34deg); }
-  .all-work-link:hover .github-card-visual,
-  .all-work-link:focus-visible .github-card-visual { border-color: color-mix(in srgb, var(--github-color) 55%, var(--line)); }
-  .all-work-link:hover .github-card-visual::before,
-  .all-work-link:focus-visible .github-card-visual::before { opacity: .34; transform: scaleX(.64) rotate(142deg); }
-  .all-work-link:hover .github-card-visual::after,
-  .all-work-link:focus-visible .github-card-visual::after { opacity: .28; transform: scaleX(.54) rotate(-138deg); }
-
-  .github-card-index {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    color: var(--muted);
-    font-size: .75rem;
-    font-weight: 800;
-    letter-spacing: .12em;
-  }
-  .github-card-visual > p {
-    position: relative;
-    z-index: 1;
-    margin: 0;
-    color: var(--ink);
-    font-size: clamp(3.5rem, 6.6vw, 6.5rem);
-    font-weight: 900;
-    line-height: .76;
-    letter-spacing: -.085em;
-    text-align: center;
-  }
-  .github-card-visual > p em { color: transparent; font-style: normal; -webkit-text-stroke: 1px var(--github-color); }
-  .github-card-signal {
-    position: absolute;
-    right: 1rem;
-    bottom: 1rem;
-    width: .52rem;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: var(--github-color);
-    box-shadow: 0 0 16px var(--github-color);
-  }
-
-  .github-card-main { padding: clamp(1.3rem, 2.4vw, 2rem) clamp(.65rem, 1.3vw, 1.1rem) 1.5rem; }
-  .github-card-label {
-    margin: 0;
-    color: var(--accent-strong);
-    font-size: .75rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: .13em;
-  }
-  .github-card-main > strong {
-    display: block;
-    margin: .9rem 0 1rem;
-    font-size: var(--card-title-size);
-    line-height: 1.08;
-    letter-spacing: -.08em;
-  }
-  .github-card-description { max-width: 38rem; margin: 0; color: var(--muted); font-size: clamp(.84rem, 1vw, .98rem); line-height: 1.68; }
-
-  .github-card-footer {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-top: auto;
-    padding: 1.25rem clamp(.65rem, 1.3vw, 1.1rem) .75rem;
-    border-top: 1px solid var(--line);
-  }
-  .github-card-footer ul { display: flex; flex-wrap: wrap; gap: .42rem; margin: 0; padding: 0; list-style: none; }
-  .github-card-footer li {
-    padding: .42rem .64rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-tag);
-    color: var(--muted);
-    font-size: .75rem;
-    transition: border-color .3s ease;
-  }
-  .github-card-footer i {
-    flex: 0 0 auto;
-    display: grid;
-    place-items: center;
-    width: 2.6rem;
-    aspect-ratio: 1;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
     border: 1px solid var(--line);
     border-radius: 50%;
-    color: var(--ink);
-    font-size: 1.25rem;
-    font-style: normal;
-    transition: border-color .3s ease, transform .3s ease;
+    color: var(--accent-text);
+    background: var(--bg);
+    font: 500 .75rem/1 ui-monospace, monospace;
+    letter-spacing: 0;
   }
-  .all-work-link:hover .github-card-footer li,
-  .all-work-link:focus-visible .github-card-footer li { color: var(--ink); border-color: color-mix(in srgb, var(--github-color) 58%, var(--line)); }
-  .all-work-link:hover .github-card-footer i,
-  .all-work-link:focus-visible .github-card-footer i {
-    border-color: var(--github-color);
-    color: var(--accent-strong);
-    transform: translate(.15rem, -.15rem);
-  }
+
+
 }
 
 @layer motion {
@@ -440,8 +328,6 @@
     :root { --section-title-size: clamp(2rem, 8.5vw, 3rem); }
     .section-heading > div { grid-template-columns: 1fr; align-items: start; }
     .project-list { grid-template-columns: 1fr; }
-    .github-card-visual { min-height: min(68vw, 20rem); }
-    .github-card-visual > p { font-size: clamp(3.3rem, 15vw, 5.4rem); }
   }
 
   @media (prefers-reduced-motion: reduce) {

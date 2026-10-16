@@ -11,18 +11,18 @@ const smallPoster = project.poster.replace(/\.avif$/, "-320.avif");
 ---
 
 <article
-  class="project-card"
+  class:list={["project-card", { "project-featured": project.featured }]}
   style={`--project-accent: ${project.accent}; --project-accent-light: ${project.lightAccent}; --delay: ${index * 70}ms;`}
   data-reveal="project"
 >
-  <a href={project.href} target="_blank" rel="noreferrer">
+  <a href={project.caseStudy ?? project.href} target={project.caseStudy ? undefined : "_blank"} rel={project.caseStudy ? undefined : "noreferrer"}>
     <div class="project-visual">
       <span class="visual-index">0{index + 1}</span>
       <img
         class="project-poster-image"
         src={project.poster}
         srcset={`${smallPoster} 640w, ${project.poster} 1280w`}
-        sizes="(max-width: 48rem) calc(100vw - 2.65rem), (max-width: 92rem) 45vw, 704px"
+        sizes={project.featured ? "(max-width: 58rem) 90vw, (max-width: 92rem) 50vw, 740px" : "(max-width: 48rem) calc(100vw - 2.65rem), (max-width: 92rem) 45vw, 704px"}
         alt={`${project.title} project preview`}
         width="1280"
         height="800"
@@ -33,9 +33,10 @@ const smallPoster = project.poster.replace(/\.avif$/, "-320.avif");
     </div>
 
     <div class="project-main">
-      <p class="project-label">{project.label}</p>
+      <p class="project-label">{project.featured ? `Featured project · ${project.label}` : project.label}</p>
       <h3>{project.title}</h3>
       <p class="project-description">{project.description}</p>
+      {project.caseStudy && <span class="case-study-cta">Explore project <span aria-hidden="true">↗</span></span>}
     </div>
 
     <div class="project-footer">
@@ -45,11 +46,14 @@ const smallPoster = project.poster.replace(/\.avif$/, "-320.avif");
       <span class="project-link" aria-hidden="true">↗</span>
     </div>
 
-    <span class="visually-hidden">Opens {project.title} on GitHub in a new tab</span>
+    {!project.caseStudy && <span class="visually-hidden">Opens {project.title} on GitHub in a new tab</span>}
   </a>
 </article>
 
 <style>
+  .case-study-cta { display: inline-flex; align-items: center; gap: 1.25rem; min-height: 44px; padding: .75rem 1.1rem; border-radius: var(--radius-control); color: var(--accent-ink); background: var(--accent); font-size: .875rem; font-weight: 600; margin: 1.5rem 0 0; }
+  .case-study-cta span { transition: transform .2s ease; }
+  a:is(:hover, :focus-visible) .case-study-cta span { transform: translate(.15rem, -.15rem); }
   .project-card {
     /* Render distant cards when needed; retain their measured height afterward. */
     content-visibility: auto;
@@ -211,9 +215,34 @@ const smallPoster = project.poster.replace(/\.avif$/, "-320.avif");
 
   a:hover .project-link,
   a:focus-visible .project-link {
-    border-color: var(--project-color);
-    color: var(--project-color);
-    transform: translate(.15rem, -.15rem);
+    border-color: var(--accent-text);
+    color: var(--accent-text);
+    background: var(--surface-raised);
+    transform: translate(.2rem, -.2rem);
+  }
+
+  a:active .project-link { transform: translate(.1rem, -.1rem) scale(.96); }
+  @media (prefers-reduced-motion: reduce) {
+    .project-card:is(:hover, :focus-within, :active),
+    a:is(:hover, :focus-visible, :active) .project-link { transform: none; }
+    a:is(:hover, :focus-visible) .project-poster-image,
+    a:is(:hover, :focus-visible) .case-study-cta span { transform: none; }
+  }
+
+  .project-featured { grid-column: 1 / -1; contain-intrinsic-block-size: auto 30rem; }
+  .project-featured > a { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); grid-template-rows: 1fr auto; column-gap: clamp(1rem, 3vw, 3rem); }
+  .project-featured .project-visual { grid-row: 1 / 3; min-height: clamp(23rem, 34vw, 31rem); }
+  .project-featured .project-poster-image { object-fit: contain; }
+  .project-featured .project-main { align-self: center; padding-block: 2rem; }
+  .project-featured h3 { font-size: clamp(2rem, 4vw, 3.5rem); }
+  .project-featured .project-description { font-size: 1rem; }
+  .project-card:not(.project-featured) h3 { font-size: clamp(1.5rem, 2.5vw, 2rem); }
+  .project-card:not(.project-featured) .project-visual { min-height: clamp(11rem, 19vw, 17rem); }
+
+  @media (max-width: 58rem) {
+    .project-featured > a { display: flex; }
+    .project-featured .project-visual { min-height: clamp(15rem, 55vw, 28rem); }
+    .project-featured .project-main { align-self: stretch; }
   }
 
   @media (max-width: 64rem) {
@@ -222,5 +251,6 @@ const smallPoster = project.poster.replace(/\.avif$/, "-320.avif");
 
   @media (max-width: 48rem) {
     .project-visual { min-height: min(68vw, 20rem); }
+    .project-card:not(.project-featured) .project-visual { min-height: min(52vw, 16rem); }
   }
 </style>

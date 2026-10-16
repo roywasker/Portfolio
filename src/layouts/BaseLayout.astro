@@ -165,7 +165,8 @@ const structuredData = {
       });
       syncMobileMenu();
 
-      const sectionLinks = [...document.querySelectorAll<HTMLAnchorElement>("[data-section-link]")];
+      const sectionLinks = [...document.querySelectorAll<HTMLAnchorElement>("[data-section-link]")]
+        .filter((link) => link.pathname === location.pathname);
       const navigationSections = [...new Set(sectionLinks.map((link) => link.hash))]
         .map((hash) => document.querySelector<HTMLElement>(hash))
         .filter((section): section is HTMLElement => section !== null);

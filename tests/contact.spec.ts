@@ -15,11 +15,17 @@ test("copies the exact email and clears the success announcement", async ({ page
   await copy.click();
   await expect(page.locator("html")).toHaveAttribute("data-copied-email", profile.email);
   await expect(copy).toHaveText("Copied ✓");
+  await expect(copy).toHaveAttribute('data-copied', '');
   await expect(copy).toBeEnabled();
   await expect(copy).toBeFocused();
   await expect(page.getByRole("status")).toHaveText("Email address copied to clipboard.");
-  await page.clock.fastForward(4001);
+  await page.clock.fastForward(2000);
+  await copy.click();
+  await page.clock.fastForward(2500);
+  await expect(copy).toHaveText("Copied ✓");
+  await page.clock.fastForward(1501);
   await expect(copy).toHaveText("Copy email");
+  await expect(copy).not.toHaveAttribute('data-copied');
   await expect(page.getByRole("status")).toBeEmpty();
 });
 
