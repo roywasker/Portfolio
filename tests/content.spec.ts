@@ -134,10 +134,13 @@ for (const javaScriptEnabled of [true, false]) {
         // Leave the document so each URL exercises an initial fragment load.
         await page.goto("about:blank");
         await page.goto(`/#${id}`);
-        await page.evaluate(async () => {
+        await page.evaluate(async (javaScriptEnabled) => {
           await document.fonts.ready;
-          await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-        });
+          // Animation frame callbacks do not run when JavaScript is disabled.
+          if (javaScriptEnabled) {
+            await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+          }
+        }, javaScriptEnabled);
         const heading = page.locator(`#${id}`).locator(id === "contact" ? ".eyebrow" : `#${id}-title`);
         await expect(heading).toBeInViewport();
         await expect.poll(async () => {

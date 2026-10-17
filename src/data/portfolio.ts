@@ -96,10 +96,10 @@ export const projects: Project[] = [
   },
   {
     title: "Portfolio",
-    label: "Kobweb website",
+    label: "Personal website",
     description:
-      "The original portfolio, built in Kotlin for the web — an exploration of Compose patterns beyond mobile.",
-    stack: ["Kotlin", "Kobweb", "Compose HTML"],
+      "A responsive portfolio built with Astro and TypeScript to showcase Android projects through interactive case studies, light and dark themes, and scroll-driven animations.",
+    stack: ["Astro", "TypeScript", "CSS"],
     href: "https://github.com/roywasker/Portfolio",
     poster: "/images/projects/portfolio-v1.avif",
     accent: "#ff7a9e",
